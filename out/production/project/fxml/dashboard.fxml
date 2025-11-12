@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.fishingadventure.controller.DashboardController"
+            styleClass="dashboard-root"
+            prefWidth="1280" prefHeight="720">
+    
+    <!-- Top Bar - Player Info and Resources -->
+    <top>
+        <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="30">
+            <padding>
+                <Insets top="15" right="20" bottom="15" left="20"/>
+            </padding>
+            
+            <!-- Player Name -->
+            <Label fx:id="playerNameLabel" styleClass="player-info-label" text="Player: Unknown"/>
+            
+            <!-- Spacer -->
+            <Region HBox.hgrow="ALWAYS"/>
+            
+            <!-- Coins -->
+            <HBox spacing="10" alignment="CENTER">
+                <Label text="💰" style="-fx-font-size: 24px;"/>
+                <Label fx:id="coinsLabel" styleClass="resource-label" text="0"/>
+            </HBox>
+            
+            <!-- XP -->
+            <HBox spacing="10" alignment="CENTER">
+                <Label text="⭐" style="-fx-font-size: 24px;"/>
+                <Label fx:id="xpLabel" styleClass="resource-label" text="0"/>
+            </HBox>
+            
+            <!-- Baits -->
+            <HBox spacing="10" alignment="CENTER">
+                <Label text="🪱" style="-fx-font-size: 24px;"/>
+                <Label fx:id="baitsLabel" styleClass="resource-label" text="0"/>
+            </HBox>
+            
+        </HBox>
+    </top>
+    
+    <!-- Center - Main Content -->
+    <center>
+        <VBox alignment="CENTER" spacing="50">
+            
+            <!-- App Title -->
+            <Label text="🎣 Fishing Adventure" 
+                   style="-fx-font-size: 48px; -fx-font-weight: bold; -fx-text-fill: #003366; 
+                          -fx-effect: dropshadow(gaussian, white, 3, 0, 0, 0);"/>
+            
+            <!-- GO FISHING Button -->
+            <Button fx:id="goFishingButton" text="GO FISHING!" 
+                    styleClass="go-fishing-button"
+                    onAction="#handleGoFishing"/>
+            
+            <!-- Current Rod Display -->
+            <HBox alignment="CENTER" spacing="15">
+                <Label text="Current Rod:" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+                <Label fx:id="currentRodLabel" text="Bamboo Rod" 
+                       style="-fx-font-size: 20px; -fx-text-fill: #4CAF50;"/>
+            </HBox>
+            
+        </VBox>
+    </center>
+    
+    <!-- Bottom - Navigation Buttons -->
+    <bottom>
+        <HBox alignment="CENTER" spacing="20" style="-fx-padding: 20;">
+            
+            <Button text="Inventory" styleClass="nav-button" onAction="#handleInventory"/>
+            <Button text="Shop" styleClass="nav-button" onAction="#handleShop"/>
+            <Button text="Daily Reward" styleClass="nav-button" onAction="#handleDailyReward"/>
+            <Button text="Logbook" styleClass="nav-button" onAction="#handleLogbook"/>
+            <Button text="Leaderboard" styleClass="nav-button" onAction="#handleLeaderboard"/>
+            <Button text="About" styleClass="nav-button" onAction="#handleAbout"/>
+            <Button text="Logout" styleClass="secondary-button" onAction="#handleLogout"/>
+            
+        </HBox>
+    </bottom>
+    
+</BorderPane>
