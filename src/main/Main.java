@@ -37,7 +37,7 @@ public class Main extends Application {
     }
 
 
-    private Scene makeWelcomeScene(Stage stage) {
+    private Scene makeWelcomeScene() {
         // Create root StackPane for layering
         StackPane root = new StackPane();
         
@@ -56,11 +56,10 @@ public class Main extends Application {
         }
         
         // Center panel with translucent background
-        VBox centerPanel = new VBox(20);
+        VBox centerPanel = new VBox(12); // tighter spacing (12 instead of 20)
         centerPanel.setAlignment(Pos.CENTER);
-        centerPanel.setPadding(new Insets(40));
-        centerPanel.setMaxWidth(600);
-        centerPanel.setMaxHeight(300);
+        centerPanel.setMaxWidth(550);
+        centerPanel.setMaxHeight(250);
         centerPanel.getStyleClass().add("login-panel");
         
         // Title
@@ -109,7 +108,7 @@ public class Main extends Application {
         // Add all elements to center panel
         centerPanel.getChildren().addAll(
             titleLabel,
-            new Region(), // Spacer
+            // Removed Spacer
             usernameLabel,
             usernameField,
             passwordLabel,
@@ -207,7 +206,17 @@ public class Main extends Application {
 
         // Create the splash layout
         StackPane splashLayout = new StackPane();
-        splashLayout.setId("splash-layout");
+
+        // Background image
+        ImageView bg = new ImageView(new Image(getClass().getResourceAsStream("/backgrounds/splash/splashbg.png")));
+        bg.setFitWidth(1280);
+        bg.setFitHeight(720);
+        bg.setPreserveRatio(false);
+
+        // Warm overlay
+        Region overlay = new Region();
+        overlay.setId("splash-overlay");
+        overlay.setPrefSize(1280, 720);
 
         // Center logo
         Label logo = new Label("FISHDA");
@@ -219,8 +228,17 @@ public class Main extends Application {
         footer.setId("splash-footer");
         StackPane.setAlignment(footer, Pos.BOTTOM_CENTER);
 
+        // footer background
+        Region footerBg = new Region();
+        footerBg.setPrefHeight(30); // height of the box
+        footerBg.setMaxWidth(Double.MAX_VALUE);
+
+        StackPane footerContainer = new StackPane(footerBg, footer);
+        StackPane.setAlignment(footerContainer, Pos.BOTTOM_CENTER);
+
+
         // Add to layout
-        splashLayout.getChildren().addAll(logo, footer);
+        splashLayout.getChildren().addAll(bg, overlay, logo, footerContainer);
 
         // Scene
         Scene splashScene = new Scene(splashLayout, 1280, 720);
@@ -238,7 +256,7 @@ public class Main extends Application {
             FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), splashLayout);
             fadeOut.setFromValue(1);
             fadeOut.setToValue(0);
-            fadeOut.setOnFinished(ev -> stage.setScene(makeWelcomeScene(stage)));
+            fadeOut.setOnFinished(ev -> stage.setScene(makeWelcomeScene()));
             fadeOut.play();
         });
         wait.play();

@@ -32,97 +32,100 @@
    ======================================== */
 
 .login-background {
-    -fx-background-color: linear-gradient(to bottom, #a0d8ef, #f5e1b3);
+    -fx-background-color: linear-gradient(to bottom, #f5e1b3, #f8c16a);
+    -fx-background-size: cover;
 }
 
 .login-panel {
-    -fx-background-color: rgba(255, 250, 240, 0.95);
-    -fx-background-radius: 25;
-    -fx-border-radius: 25;
-    -fx-border-color: #d4a373;
-    -fx-border-width: 4;
-    -fx-effect: dropshadow(gaussian, rgba(60, 40, 20, 0.4), 25, 0, 0, 5);
-    -fx-padding: 50;
+    -fx-background-color: rgba(255, 245, 220, 0.95); /* warm cream */
+    -fx-background-radius: 24px;
+    -fx-border-radius: 24px;
+    -fx-border-color: #d4a373; /* earthy brown */
+    -fx-border-width: 4px;
+    -fx-effect: dropshadow(gaussian, rgba(60, 40, 20, 0.3), 24, 0, 0, 4);
+    -fx-padding: 30px;
     -fx-opacity: 0.98;
 }
 
 .title-label {
-    -fx-font-family: "Press Start 2P", "Verdana", "Courier New"; /* pixel/farm */
-    -fx-font-size: 50px;
+    -fx-font-family: "Press Start 2P", "Verdana", "Courier New"; /* retro/pixel style */
+    -fx-font-size: 48px;
     -fx-font-weight: bold;
     -fx-text-fill: linear-gradient(to bottom, #ffe27d, #f8a851); /* golden sunlight */
-    -fx-effect: dropshadow(gaussian, rgba(120, 60, 20, 0.7), 5, 0, 2, 2);
-    -fx-padding: 0 0 20 0;
+    -fx-effect: dropshadow(gaussian, rgba(120, 60, 20, 0.7), 6, 0, 2, 2);
+    -fx-padding: 0 0 8px 0; /* less space under title for compact look */
 }
 
 .field-label {
     -fx-font-family: "Press Start 2P", "Verdana", "Courier New";
     -fx-font-size: 14px;
     -fx-font-weight: 600;
-    -fx-text-fill: #7a5c3c;
-    -fx-padding: 0 0 5 0;
+    -fx-text-fill: #7a5c3c; /* earthy brown */
+    -fx-padding: 0 0 6px 0; /* tighter spacing */
 }
 
 .input-field {
-    -fx-padding: 10;
+    -fx-padding: 12px;
     -fx-background-color: rgba(255, 250, 240, 0.9);
-    -fx-background-radius: 12;
-    -fx-border-radius: 12;
+    -fx-background-radius: 12px;
+    -fx-border-radius: 12px;
     -fx-border-color: #d4a373;
-    -fx-border-width: 2;
+    -fx-border-width: 2px;
     -fx-font-family: "Press Start 2P", "Verdana", "Courier New";
     -fx-font-size: 14px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 2, 0, 0, 1);
 }
 
 .input-field:focused {
-    -fx-border-color: #a1c45a;
+    -fx-border-color: #a1c45a; /* green accent for focus */
     -fx-effect: dropshadow(gaussian, rgba(161, 196, 90, 0.4), 5, 0, 0, 0);
 }
 
 .error-label {
-    -fx-text-fill: #f54e42;
+    -fx-text-fill: #f54e42; /* warm red */
     -fx-font-family: "Press Start 2P", "Verdana", "Courier New";
     -fx-font-size: 12px;
     -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 1, 1);
+    -fx-padding: 4 0 4 0;
 }
 
 .success-label {
-    -fx-text-fill: #a1c45a;
+    -fx-text-fill: #a1c45a; /* warm green */
     -fx-font-family: "Press Start 2P", "Verdana", "Courier New";
     -fx-font-size: 12px;
     -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 1, 1);
 }
 
 /* ========================================
    SPLASH SCREEN
    ======================================== */
 
-#splash-layout {
-    -fx-background-image: url("/backgrounds/splash/splashbg.png");
-    -fx-background-size: cover;
-    -fx-background-position: center center;
-    -fx-background-repeat: no-repeat;
-
-    -fx-effect: innershadow(two-pass-box, rgba(0,0,0,0.2), 60, 0, 0, 0);
-}
 /* Logo text */
 #splash-logo {
-    -fx-font-size: 64px;
-    -fx-font-family: "Press Start 2P", "Comic Sans MS", "Papyrus";
-    -fx-text-fill: linear-gradient(to bottom, #ffe27d, #f8a851);
-    -fx-font-weight: bold;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.6), 6, 0.0, 3, 3);
-    -fx-alignment: center;
-}
-/* Footer text */
-#splash-footer {
-    -fx-font-size: 14px;
     -fx-font-family: "Press Start 2P", "Verdana", "Courier New";
-    -fx-text-fill: rgba(255, 255, 255, 0.7);
-    -fx-alignment: center;
+    -fx-font-size: 64px;
+    -fx-font-weight: bold;
+    -fx-text-fill: linear-gradient(to bottom, #ffe27d, #f8a851);
+    -fx-effect: dropshadow(gaussian, rgba(120, 60, 20, 0.6), 6, 0, 3, 3);
+}
+/* Footer / Copyright */
+#splash-footer {
+    -fx-font-family: "Press Start 2P", "Verdana", "Courier New";
+    -fx-font-size: 14px;
+    -fx-text-fill: rgba(255, 245, 220, 0.9);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 4, 0, 1, 1);
     -fx-padding: 0 0 20 0;
-    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.3) , 2,0.0,1,1);
+}
+
+#splash-overlay{
+    -fx-background-color: rgba(245, 225, 179, 0.6);
+}
+
+#splash-footer-bg{
+    -fx-background-color: rgba(0,0,0,0.3);
+    -fx-background-radius: 5;
 }
 
 /* ========================================
@@ -130,14 +133,12 @@
    ======================================== */
 
 .btn {
-    -fx-min-width: 120;
-    -fx-text-fill: white;
+    -fx-font-family: "Press Start 2P";
     -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-padding: 10 20;
-    -fx-background-radius: 10;
-    -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 2);
+    -fx-background-radius: 12px;
+    -fx-border-radius: 12px;
+    -fx-padding: 8px 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 0, 1);
 }
 
 .btn:hover {
@@ -153,7 +154,8 @@
 }
 
 .btn-success {
-    -fx-background-color: #4CAF50;
+    -fx-background-color: #a1c45a;
+    -fx-text-fill: #fff8dc;
 }
 
 .btn-success:hover {
@@ -161,7 +163,8 @@
 }
 
 .btn-info {
-    -fx-background-color: #2196F3;
+    -fx-background-color: #f8a851;
+    -fx-text-fill: #fff8dc;
 }
 
 .btn-info:hover {
