@@ -170,34 +170,59 @@
 }
 
 /* Left Side Panel (Light Brown) */
+/* ========================================
+   EPIC WOODEN SIDE PANEL
+   ======================================== */
+
 .side-panel {
-    -fx-background-color: rgba(210, 180, 140, 0.92);
-    -fx-background-radius: 0 20 20 0;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 15, 0, 5, 0);
-    -fx-padding: 25;
+    /* A multi-stop gradient to simulate dark, rich wood plank texture */
+    -fx-background-color:
+        linear-gradient(to bottom, #5e3e24 0%, #4a2e18 50%, #5e3e24 100%);
+
+    /* A thick, dark brown border designed to look like a carved frame */
+    -fx-border-color: #362010;
+    -fx-border-width: 6px;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 16px;
+
+    /* A deep shadow behind the panel to make it pop off the background */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 20, 0, 4, 4);
+
+    -fx-padding: 25px;
 }
 
 .side-panel-title {
+    -fx-font-family: 'BoldPixels', 'Courier New', monospace;
     -fx-font-size: 28px;
     -fx-font-weight: bold;
-    -fx-text-fill: #3D2817;
-    -fx-font-family: 'BoldPixels', 'Courier New', monospace;
+    /* Gold/Yellow text color to look like brass or gold leaf */
+    -fx-text-fill: #f4d35e;
+    /* A slight dark shadow behind text to make it look embossed */
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.8), 2, 0, 2, 2);
+    -fx-padding: 0 0 10px 0;
+    /* A decorative divider line underneath the title */
+    -fx-border-color: transparent transparent #362010 transparent;
+    -fx-border-width: 3px;
 }
 
 .side-panel-close-btn {
-    -fx-background-color: #8B4513;
-    -fx-text-fill: white;
-    -fx-font-size: 16px;
+    -fx-background-color: #a32e2e; /* Deep RPG Red */
+    -fx-text-fill: #f4d35e; /* Gold 'X' */
     -fx-font-weight: bold;
-    -fx-background-radius: 8;
-    -fx-padding: 8 15;
+    -fx-font-size: 16px;
+    -fx-background-radius: 50%; /* Makes it circular */
+    -fx-border-radius: 50%;
+    -fx-border-color: #362010;
+    -fx-border-width: 3px;
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
     -fx-cursor: hand;
 }
 
 .side-panel-close-btn:hover {
-    -fx-background-color: #A0522D;
+    -fx-background-color: #c43e3e; /* Brighter red on hover */
+    -fx-effect: dropshadow(three-pass-box, #f4d35e, 10, 0, 0, 0); /* Gold glow on hover */
 }
-
 /* Bottom Navigation */
 .bottom-nav {
     -fx-background-color: rgba(44, 95, 127, 0.95);
@@ -269,25 +294,46 @@
    INVENTORY STYLES (Future use)
    ======================================== */
 
-.inventory-slot {
-    -fx-background-color: rgba(255, 255, 255, 0.3);
-    -fx-background-radius: 10;
-    -fx-border-color: #2C5F7F;
-    -fx-border-width: 2;
-    -fx-border-radius: 10;
-}
+/* ========================================
+   INVENTORY SOCKETS
+   ======================================== */
 
-.inventory-slot-empty {
-    -fx-background-color: rgba(200, 200, 200, 0.2);
-    -fx-background-radius: 10;
-    -fx-border-color: #CCCCCC;
-    -fx-border-width: 2;
-    -fx-border-radius: 10;
+/* ========================================
+   INVENTORY SOCKETS (FIXED)
+   ======================================== */
+
+.inventory-slot {
+    /* Darker inner background */
+    -fx-background-color: #2b1a0e;
+    /* Lighter brown border to define the edges */
+    -fx-border-color: #7c5636;
+    -fx-border-width: 3px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 6px;
+
+    /* FIXED: Removed hyphen here (innershadow) */
+    -fx-effect: innershadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+
+    -fx-cursor: hand;
+    -fx-padding: 4px;
 }
 
 .inventory-slot:hover {
-    -fx-effect: dropshadow(gaussian, rgba(76, 175, 80, 0.5), 10, 0, 0, 0);
-    -fx-cursor: hand;
+     /* Slight gold highlight on the border when hovering over a slot */
+    -fx-border-color: #f4d35e;
+    -fx-background-color: #362010;
+}
+
+/* Optional: If a slot has an item actively selected */
+.inventory-slot:focused {
+     -fx-border-color: #f4d35e;
+     -fx-effect: dropshadow(three-pass-box, #f4d35e, 5, 0, 0, 0);
+}
+
+/* Helper to hide ugly default button styles if the image doesn't load */
+.inventory-slot-empty {
+    -fx-background-color: #2b1a0e;
+    -fx-border-color: #4a2e18;
 }
 
 /* Rarity borders */

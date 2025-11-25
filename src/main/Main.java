@@ -195,9 +195,9 @@ public class Main extends Application {
     
     private void showDashboard(Player player) {
         DashboardScreen dashboard = new DashboardScreen(primaryStage, player);
-        new DashboardScreen(primaryStage, player);
-
+        primaryStage.setScene(dashboard.getScene());
     }
+
 
     private Player loadPlayerFromData(String username, Map<String, String> data) {
         Player player = new Player(username);
