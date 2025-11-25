@@ -32,54 +32,64 @@
    ======================================== */
 
 .login-background {
-    -fx-background-color: #87CEEB;
+    -fx-background-color: linear-gradient(to bottom, #a0d8ef, #f5e1b3);
 }
 
 .login-panel {
-    -fx-background-color: rgba(255, 255, 255, 0.85);
-    -fx-background-radius: 20;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 15, 0, 0, 5);
-    -fx-padding: 40;
+    -fx-background-color: rgba(255, 250, 240, 0.95);
+    -fx-background-radius: 25;
+    -fx-border-radius: 25;
+    -fx-border-color: #d4a373;
+    -fx-border-width: 4;
+    -fx-effect: dropshadow(gaussian, rgba(60, 40, 20, 0.4), 25, 0, 0, 5);
+    -fx-padding: 50;
+    -fx-opacity: 0.98;
 }
 
 .title-label {
-    -fx-font-family: "Arial";
-    -fx-font-size: 32px;
+    -fx-font-family: "Press Start 2P", "Verdana", "Courier New"; /* pixel/farm */
+    -fx-font-size: 50px;
     -fx-font-weight: bold;
-    -fx-text-fill: #2C5F7F;
+    -fx-text-fill: linear-gradient(to bottom, #ffe27d, #f8a851); /* golden sunlight */
+    -fx-effect: dropshadow(gaussian, rgba(120, 60, 20, 0.7), 5, 0, 2, 2);
+    -fx-padding: 0 0 20 0;
 }
 
 .field-label {
-    -fx-font-family: "Arial";
+    -fx-font-family: "Press Start 2P", "Verdana", "Courier New";
     -fx-font-size: 14px;
     -fx-font-weight: 600;
-    -fx-text-fill: #2C5F7F;
+    -fx-text-fill: #7a5c3c;
+    -fx-padding: 0 0 5 0;
 }
 
 .input-field {
     -fx-padding: 10;
-    -fx-background-radius: 10;
-    -fx-border-radius: 10;
-    -fx-border-color: #2C5F7F;
+    -fx-background-color: rgba(255, 250, 240, 0.9);
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color: #d4a373;
     -fx-border-width: 2;
+    -fx-font-family: "Press Start 2P", "Verdana", "Courier New";
     -fx-font-size: 14px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);
 }
 
 .input-field:focused {
-    -fx-border-color: #4CAF50;
-    -fx-effect: dropshadow(gaussian, rgba(76, 175, 80, 0.4), 5, 0, 0, 0);
+    -fx-border-color: #a1c45a;
+    -fx-effect: dropshadow(gaussian, rgba(161, 196, 90, 0.4), 5, 0, 0, 0);
 }
 
 .error-label {
-    -fx-text-fill: #F44336;
-    -fx-font-family: "Arial";
+    -fx-text-fill: #f54e42;
+    -fx-font-family: "Press Start 2P", "Verdana", "Courier New";
     -fx-font-size: 12px;
     -fx-font-weight: bold;
 }
 
 .success-label {
-    -fx-text-fill: #4CAF50;
-    -fx-font-family: "Arial";
+    -fx-text-fill: #a1c45a;
+    -fx-font-family: "Press Start 2P", "Verdana", "Courier New";
     -fx-font-size: 12px;
     -fx-font-weight: bold;
 }
@@ -89,15 +99,15 @@
    ======================================== */
 
 #splash-layout {
-    -fx-background-image: url("/backgrounds/splash/splash2.png");
+    -fx-background-image: url("/backgrounds/splash/splashbg.png");
     -fx-background-size: cover;
     -fx-background-position: center center;
     -fx-background-repeat: no-repeat;
 
-    -fx-effect: innershadow(two-pass-box, rgba(0,0,0,0.25), 60, 0.0, 0, 0);
+    -fx-effect: innershadow(two-pass-box, rgba(0,0,0,0.2), 60, 0, 0, 0);
 }
 /* Logo text */
-#logoSplash {
+#splash-logo {
     -fx-font-size: 64px;
     -fx-font-family: "Press Start 2P", "Comic Sans MS", "Papyrus";
     -fx-text-fill: linear-gradient(to bottom, #ffe27d, #f8a851);
@@ -106,7 +116,7 @@
     -fx-alignment: center;
 }
 /* Footer text */
-#footerSplash {
+#splash-footer {
     -fx-font-size: 14px;
     -fx-font-family: "Press Start 2P", "Verdana", "Courier New";
     -fx-text-fill: rgba(255, 255, 255, 0.7);

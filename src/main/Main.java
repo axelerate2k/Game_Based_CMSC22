@@ -59,25 +59,29 @@ public class Main extends Application {
         VBox centerPanel = new VBox(20);
         centerPanel.setAlignment(Pos.CENTER);
         centerPanel.setPadding(new Insets(40));
-        centerPanel.setMaxWidth(400);
-        centerPanel.setMaxHeight(500);
+        centerPanel.setMaxWidth(600);
+        centerPanel.setMaxHeight(300);
         centerPanel.getStyleClass().add("login-panel");
         
         // Title
         Label titleLabel = new Label("🎣 Fishing Adventure");
         titleLabel.getStyleClass().add("title-label");
         
-        // Username field
+        // Username Label
         Label usernameLabel = new Label("Username:");
         usernameLabel.getStyleClass().add("field-label");
+
+        // text field
         TextField usernameField = new TextField();
         usernameField.setPromptText("Enter username");
         usernameField.setMaxWidth(300);
         usernameField.getStyleClass().add("input-field");
         
-        // Password field
+        // Password Label
         Label passwordLabel = new Label("Password:");
         passwordLabel.getStyleClass().add("field-label");
+
+        // text field
         PasswordField passwordField = new PasswordField();
         passwordField.setPromptText("Enter password");
         passwordField.setMaxWidth(300);
@@ -207,12 +211,12 @@ public class Main extends Application {
 
         // Center logo
         Label logo = new Label("FISHDA");
-        logo.setId("logoSplash");
+        logo.setId("splash-logo");
         StackPane.setAlignment(logo, Pos.CENTER);
 
         // Footer text
         Label footer = new Label("© 2025 Charlie Kirk Studio");
-        footer.setId("footerSplash");
+        footer.setId("splash-footer");
         StackPane.setAlignment(footer, Pos.BOTTOM_CENTER);
 
         // Add to layout
