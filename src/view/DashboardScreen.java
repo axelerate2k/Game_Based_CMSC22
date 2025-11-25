@@ -46,7 +46,7 @@ public class DashboardScreen {
         // --- Background ---
         ImageView bgView = new ImageView();
         try {
-            Image bgImage = new Image(getClass().getResourceAsStream("/fishing_background.png"));
+            Image bgImage = new Image(getClass().getResourceAsStream("/backgrounds/login/fishing_background.png"));
             bgView.setImage(bgImage);
             bgView.setFitWidth(1280);
             bgView.setFitHeight(720);
@@ -118,7 +118,7 @@ public class DashboardScreen {
         // --- Scene ---
         scene = new Scene(root, 1280, 720);
         try {
-            scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("/stylesheet/styles.css").toExternalForm());
         } catch (Exception e) {
             System.err.println("Could not load CSS: " + e.getMessage());
         }

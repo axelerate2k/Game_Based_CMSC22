@@ -5,7 +5,7 @@
 /* Custom font */
 @font-face {
     font-family: 'BoldPixels';
-    src: url('BoldPixels.ttf');
+    src: url('../fonts/BoldPixels.ttf');
 }
 
 /* Root colors for consistency */
@@ -19,6 +19,7 @@
     -fx-light-bg: rgba(255, 255, 255, 0.85);
     -fx-dark-bg: rgba(0, 0, 0, 0.7);
     -fx-light-brown: rgba(210, 180, 140, 0.92);
+
 }
 
 /* Global pixel font */
@@ -81,6 +82,37 @@
     -fx-font-family: "Arial";
     -fx-font-size: 12px;
     -fx-font-weight: bold;
+}
+
+/* ========================================
+   SPLASH SCREEN
+   ======================================== */
+
+#splash-layout {
+    -fx-background-image: url("/backgrounds/splash/splash2.png");
+    -fx-background-size: cover;
+    -fx-background-position: center center;
+    -fx-background-repeat: no-repeat;
+
+    -fx-effect: innershadow(two-pass-box, rgba(0,0,0,0.25), 60, 0.0, 0, 0);
+}
+/* Logo text */
+#logoSplash {
+    -fx-font-size: 64px;
+    -fx-font-family: "Press Start 2P", "Comic Sans MS", "Papyrus";
+    -fx-text-fill: linear-gradient(to bottom, #ffe27d, #f8a851);
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.6), 6, 0.0, 3, 3);
+    -fx-alignment: center;
+}
+/* Footer text */
+#footerSplash {
+    -fx-font-size: 14px;
+    -fx-font-family: "Press Start 2P", "Verdana", "Courier New";
+    -fx-text-fill: rgba(255, 255, 255, 0.7);
+    -fx-alignment: center;
+    -fx-padding: 0 0 20 0;
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.3) , 2,0.0,1,1);
 }
 
 /* ========================================

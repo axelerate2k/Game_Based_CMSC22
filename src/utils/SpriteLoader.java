@@ -44,7 +44,7 @@ public class SpriteLoader {
      */
     public static Image[] loadFishermanIdle() {
         try {
-            Image spriteSheet = new Image(SpriteLoader.class.getResourceAsStream("/Fisherman_idle.png"));
+            Image spriteSheet = new Image(SpriteLoader.class.getResourceAsStream("/sprites/Fisherman_idle.png"));
             return extractHorizontalFrames(spriteSheet, 4, 48, 48, 0);
         } catch (Exception e) {
             System.err.println("Could not load fisherman idle sprites: " + e.getMessage());
@@ -58,7 +58,7 @@ public class SpriteLoader {
      */
     public static Image[] loadFishermanFishing() {
         try {
-            Image spriteSheet = new Image(SpriteLoader.class.getResourceAsStream("/Fisherman_fish.png"));
+            Image spriteSheet = new Image(SpriteLoader.class.getResourceAsStream("/sprites/Fisherman_fish.png"));
             return extractHorizontalFrames(spriteSheet, 4, 48, 48, 0);
         } catch (Exception e) {
             System.err.println("Could not load fisherman fishing sprites: " + e.getMessage());
@@ -72,7 +72,7 @@ public class SpriteLoader {
      */
     public static Image[] loadFishSprites() {
         try {
-            Image spriteSheet = new Image(SpriteLoader.class.getResourceAsStream("/fishes.png"));
+            Image spriteSheet = new Image(SpriteLoader.class.getResourceAsStream("/sprites/fishes.png"));
             Image[] fish = new Image[5];
             
             // Extract based on your coordinates
@@ -95,7 +95,7 @@ public class SpriteLoader {
      */
     public static Image[] loadRodSprites() {
         try {
-            Image spriteSheet = new Image(SpriteLoader.class.getResourceAsStream("/fishing_gear.png"));
+            Image spriteSheet = new Image(SpriteLoader.class.getResourceAsStream("/sprites/fishing_gear.png"));
             Image[] rods = new Image[4];
             
             rods[0] = extractSprite(spriteSheet, 32, 0, 32, 32);  // Bamboo Rod (Row 0, Col 1)
@@ -116,7 +116,7 @@ public class SpriteLoader {
      */
     public static Image[] loadBaitSprites() {
         try {
-            Image spriteSheet = new Image(SpriteLoader.class.getResourceAsStream("/fishing_gear.png"));
+            Image spriteSheet = new Image(SpriteLoader.class.getResourceAsStream("/sprites/fishing_gear.png"));
             Image[] baits = new Image[4];
             
             baits[0] = extractSprite(spriteSheet, 64, 64, 32, 32);   // Basic Worm (Row 2, Col 2)
@@ -137,7 +137,7 @@ public class SpriteLoader {
      */
     public static Image[] loadObjectSprites() {
         try {
-            Image spriteSheet = new Image(SpriteLoader.class.getResourceAsStream("/objects.png"));
+            Image spriteSheet = new Image(SpriteLoader.class.getResourceAsStream("/sprites/objects.png"));
             Image[] objects = new Image[2];
             
             objects[0] = extractSprite(spriteSheet, 32, 64, 32, 32);  // Chest (Row 2, Col 1)

@@ -1,5 +1,7 @@
 package main;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -11,6 +13,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import data.PlayerDataManager;
+import javafx.util.Duration;
 import model.Player;
 import view.DashboardScreen;
 
@@ -25,22 +28,23 @@ public class Main extends Application {
     public void start(Stage stage) {
         this.primaryStage = stage;
         this.dataManager = new PlayerDataManager();
-        
-        showLoginScreen();
-        
+
+        Scene splash = makeSplashScene(primaryStage);
         primaryStage.setTitle("Fishing Adventure");
+        primaryStage.setScene(splash);
         primaryStage.setResizable(false);
         primaryStage.show();
     }
-    
-    private void showLoginScreen() {
+
+
+    private Scene makeWelcomeScene(Stage stage) {
         // Create root StackPane for layering
         StackPane root = new StackPane();
         
         // Background GIF
         ImageView bgImageView = new ImageView();
         try {
-            Image bgImage = new Image(getClass().getResourceAsStream("/fishing_dock_login.gif"));
+            Image bgImage = new Image(getClass().getResourceAsStream("/backgrounds/login/fishing_dock_login.gif"));
             bgImageView.setImage(bgImage);
             bgImageView.setFitWidth(1280);
             bgImageView.setFitHeight(720);
@@ -182,17 +186,61 @@ public class Main extends Application {
         
         // Add background and panel to root
         root.getChildren().addAll(bgImageView, centerPanel);
-        
+
         Scene scene = new Scene(root, 1280, 720);
+
         // Load external CSS file
         try {
-            scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("/stylesheet/styles.css").toExternalForm());
         } catch (Exception e) {
             System.err.println("Could not load CSS file: " + e.getMessage());
         }
-        primaryStage.setScene(scene);
+
+        return scene;
     }
-    
+
+    private Scene makeSplashScene(Stage stage) {
+
+        // Create the splash layout
+        StackPane splashLayout = new StackPane();
+        splashLayout.setId("splash-layout");
+
+        // Center logo
+        Label logo = new Label("FISHDA");
+        logo.setId("logoSplash");
+        StackPane.setAlignment(logo, Pos.CENTER);
+
+        // Footer text
+        Label footer = new Label("© 2025 Charlie Kirk Studio");
+        footer.setId("footerSplash");
+        StackPane.setAlignment(footer, Pos.BOTTOM_CENTER);
+
+        // Add to layout
+        splashLayout.getChildren().addAll(logo, footer);
+
+        // Scene
+        Scene splashScene = new Scene(splashLayout, 1280, 720);
+        splashScene.getStylesheets().addAll(getClass().getResource("/stylesheet/styles.css").toExternalForm());
+
+        // Fade in effect
+        FadeTransition fadeIn = new FadeTransition(Duration.seconds(1), splashLayout);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        fadeIn.play();
+
+        // Wait 2 seconds, then fade out
+        PauseTransition wait = new PauseTransition(Duration.seconds(2));
+        wait.setOnFinished(e -> {
+            FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), splashLayout);
+            fadeOut.setFromValue(1);
+            fadeOut.setToValue(0);
+            fadeOut.setOnFinished(ev -> stage.setScene(makeWelcomeScene(stage)));
+            fadeOut.play();
+        });
+        wait.play();
+        return splashScene;
+    }
+
     private void showDashboard(Player player) {
         DashboardScreen dashboard = new DashboardScreen(primaryStage, player);
         primaryStage.setScene(dashboard.getScene());
