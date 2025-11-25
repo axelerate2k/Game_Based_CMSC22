@@ -1,0 +1,425 @@
+/* ========================================
+   FISHING ADVENTURE - GLOBAL STYLES
+   ======================================== */
+
+/* Custom font */
+@font-face {
+    font-family: 'BoldPixels';
+    src: url('BoldPixels.ttf');
+}
+
+/* Root colors for consistency */
+:root {
+    -fx-primary-color: #2C5F7F;
+    -fx-primary-dark: #1A3A4D;
+    -fx-success-color: #4CAF50;
+    -fx-info-color: #2196F3;
+    -fx-warning-color: #FF9800;
+    -fx-danger-color: #F44336;
+    -fx-light-bg: rgba(255, 255, 255, 0.85);
+    -fx-dark-bg: rgba(0, 0, 0, 0.7);
+    -fx-light-brown: rgba(210, 180, 140, 0.92);
+}
+
+/* Global pixel font */
+.pixel-font {
+    -fx-font-family: 'BoldPixels', 'Courier New', monospace;
+}
+
+/* ========================================
+   LOGIN SCREEN STYLES
+   ======================================== */
+
+.login-background {
+    -fx-background-color: #87CEEB;
+}
+
+.login-panel {
+    -fx-background-color: rgba(255, 255, 255, 0.85);
+    -fx-background-radius: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 15, 0, 0, 5);
+    -fx-padding: 40;
+}
+
+.title-label {
+    -fx-font-family: "Arial";
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2C5F7F;
+}
+
+.field-label {
+    -fx-font-family: "Arial";
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #2C5F7F;
+}
+
+.input-field {
+    -fx-padding: 10;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: #2C5F7F;
+    -fx-border-width: 2;
+    -fx-font-size: 14px;
+}
+
+.input-field:focused {
+    -fx-border-color: #4CAF50;
+    -fx-effect: dropshadow(gaussian, rgba(76, 175, 80, 0.4), 5, 0, 0, 0);
+}
+
+.error-label {
+    -fx-text-fill: #F44336;
+    -fx-font-family: "Arial";
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.success-label {
+    -fx-text-fill: #4CAF50;
+    -fx-font-family: "Arial";
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+/* ========================================
+   BUTTON STYLES
+   ======================================== */
+
+.btn {
+    -fx-min-width: 120;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 2);
+}
+
+.btn:hover {
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 8, 0, 0, 3);
+}
+
+.btn:pressed {
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 3, 0, 0, 1);
+}
+
+.btn-success {
+    -fx-background-color: #4CAF50;
+}
+
+.btn-success:hover {
+    -fx-background-color: #45A049;
+}
+
+.btn-info {
+    -fx-background-color: #2196F3;
+}
+
+.btn-info:hover {
+    -fx-background-color: #1976D2;
+}
+
+.btn-warning {
+    -fx-background-color: #FF9800;
+}
+
+.btn-warning:hover {
+    -fx-background-color: #F57C00;
+}
+
+.btn-danger {
+    -fx-background-color: #F44336;
+}
+
+.btn-danger:hover {
+    -fx-background-color: #D32F2F;
+}
+
+/* ========================================
+   DASHBOARD STYLES
+   ======================================== */
+
+.dashboard-root {
+    -fx-background-color: #2B4C6F;
+}
+
+.dashboard-top-bar {
+    -fx-background-color: rgba(44, 95, 127, 0.95);
+    -fx-padding: 12 20;
+    -fx-border-color: #1A3A4D;
+    -fx-border-width: 0 0 3 0;
+}
+
+.stat-label {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-font-family: 'BoldPixels', 'Courier New', monospace;
+}
+
+.stat-separator {
+    -fx-text-fill: rgba(255, 255, 255, 0.5);
+    -fx-font-size: 18px;
+}
+
+/* Left Side Panel (Light Brown) */
+/* ========================================
+   EPIC WOODEN SIDE PANEL
+   ======================================== */
+
+.side-panel {
+    /* A multi-stop gradient to simulate dark, rich wood plank texture */
+    -fx-background-color: 
+        linear-gradient(to bottom, #5e3e24 0%, #4a2e18 50%, #5e3e24 100%);
+    
+    /* A thick, dark brown border designed to look like a carved frame */
+    -fx-border-color: #362010;
+    -fx-border-width: 6px;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 16px; 
+    
+    /* A deep shadow behind the panel to make it pop off the background */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 20, 0, 4, 4);
+    
+    -fx-padding: 25px;
+}
+
+.side-panel-title {
+    -fx-font-family: 'BoldPixels', 'Courier New', monospace;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    /* Gold/Yellow text color to look like brass or gold leaf */
+    -fx-text-fill: #f4d35e;
+    /* A slight dark shadow behind text to make it look embossed */
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.8), 2, 0, 2, 2);
+    -fx-padding: 0 0 10px 0;
+    /* A decorative divider line underneath the title */
+    -fx-border-color: transparent transparent #362010 transparent;
+    -fx-border-width: 3px;
+}
+
+.side-panel-close-btn {
+    -fx-background-color: #a32e2e; /* Deep RPG Red */
+    -fx-text-fill: #f4d35e; /* Gold 'X' */
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-background-radius: 50%; /* Makes it circular */
+    -fx-border-radius: 50%;
+    -fx-border-color: #362010;
+    -fx-border-width: 3px;
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
+    -fx-cursor: hand;
+}
+
+.side-panel-close-btn:hover {
+    -fx-background-color: #c43e3e; /* Brighter red on hover */
+    -fx-effect: dropshadow(three-pass-box, #f4d35e, 10, 0, 0, 0); /* Gold glow on hover */
+}
+/* Bottom Navigation */
+.bottom-nav {
+    -fx-background-color: rgba(44, 95, 127, 0.95);
+    -fx-padding: 15;
+    -fx-spacing: 10;
+    -fx-border-color: #1A3A4D;
+    -fx-border-width: 3 0 0 0;
+}
+
+.nav-btn {
+    -fx-background-color: #2C5F7F;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 12 20;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-font-family: 'BoldPixels', 'Courier New', monospace;
+}
+
+.nav-btn:hover {
+    -fx-background-color: #3A7FA0;
+}
+
+.nav-btn-active {
+    -fx-background-color: #4CAF50;
+    -fx-effect: dropshadow(gaussian, rgba(76, 175, 80, 0.6), 8, 0, 0, 0);
+}
+
+.nav-btn-active:hover {
+    -fx-background-color: #45A049;
+}
+
+/* Go Fishing Button */
+.fishing-btn {
+    -fx-background-color: #FF6B35;
+    -fx-text-fill: white;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-padding: 15 40;
+    -fx-background-radius: 15;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 10, 0, 0, 4);
+    -fx-font-family: 'BoldPixels', 'Courier New', monospace;
+}
+
+.fishing-btn:hover {
+    -fx-background-color: #FF8C5A;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.fishing-btn:pressed {
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+.fishing-warning {
+    -fx-text-fill: #FFD700;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-color: rgba(0, 0, 0, 0.6);
+    -fx-padding: 8 15;
+    -fx-background-radius: 10;
+    -fx-font-family: 'BoldPixels', 'Courier New', monospace;
+}
+
+/* ========================================
+   INVENTORY STYLES (Future use)
+   ======================================== */
+
+/* ========================================
+   INVENTORY SOCKETS
+   ======================================== */
+
+/* ========================================
+   INVENTORY SOCKETS (FIXED)
+   ======================================== */
+
+.inventory-slot {
+    /* Darker inner background */
+    -fx-background-color: #2b1a0e;
+    /* Lighter brown border to define the edges */
+    -fx-border-color: #7c5636;
+    -fx-border-width: 3px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 6px;
+    
+    /* FIXED: Removed hyphen here (innershadow) */
+    -fx-effect: innershadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+    
+    -fx-cursor: hand;
+    -fx-padding: 4px;
+}
+
+.inventory-slot:hover {
+     /* Slight gold highlight on the border when hovering over a slot */
+    -fx-border-color: #f4d35e;
+    -fx-background-color: #362010;
+}
+
+/* Optional: If a slot has an item actively selected */
+.inventory-slot:focused {
+     -fx-border-color: #f4d35e;
+     -fx-effect: dropshadow(three-pass-box, #f4d35e, 5, 0, 0, 0);
+}
+
+/* Helper to hide ugly default button styles if the image doesn't load */
+.inventory-slot-empty {
+    -fx-background-color: #2b1a0e;
+    -fx-border-color: #4a2e18;
+}
+
+/* Rarity borders */
+.rarity-common {
+    -fx-border-color: #BBBBBB;
+    -fx-effect: dropshadow(gaussian, rgba(187, 187, 187, 0.6), 8, 0, 0, 0);
+}
+
+.rarity-rare {
+    -fx-border-color: #4A90E2;
+    -fx-effect: dropshadow(gaussian, rgba(74, 144, 226, 0.8), 10, 0, 0, 0);
+}
+
+.rarity-legendary {
+    -fx-border-color: #FFD700;
+    -fx-effect: dropshadow(gaussian, rgba(255, 215, 0, 0.9), 12, 0, 0, 0);
+}
+
+/* ========================================
+   MODAL STYLES (Future use)
+   ======================================== */
+
+.modal-overlay {
+    -fx-background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-panel {
+    -fx-background-color: white;
+    -fx-background-radius: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 20, 0, 0, 10);
+    -fx-padding: 30;
+}
+
+.modal-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2C5F7F;
+}
+
+/* ========================================
+   ANIMATION UTILITIES
+   ======================================== */
+
+.fade-in {
+    -fx-opacity: 0;
+}
+
+.fade-out {
+    -fx-opacity: 1;
+}
+
+/* ========================================
+   SHOP STYLES (Future use)
+   ======================================== */
+
+.shop-card {
+    -fx-background-color: rgba(255, 255, 255, 0.95);
+    -fx-background-radius: 12;
+    -fx-border-color: #2C5F7F;
+    -fx-border-width: 2;
+    -fx-border-radius: 12;
+    -fx-padding: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 2);
+}
+
+.shop-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(44, 95, 127, 0.4), 10, 0, 0, 3);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+/* ========================================
+   PROGRESS BAR / TIMING GAME (Future use)
+   ======================================== */
+
+.timing-bar {
+    -fx-background-color: #333333;
+    -fx-background-radius: 10;
+}
+
+.timing-indicator {
+    -fx-fill: #FFD700;
+    -fx-effect: dropshadow(gaussian, rgba(255, 215, 0, 0.8), 10, 0, 0, 0);
+}
+
+.sweet-spot {
+    -fx-fill: #4CAF50;
+    -fx-opacity: 0.7;
+}
