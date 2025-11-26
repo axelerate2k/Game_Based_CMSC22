@@ -267,6 +267,7 @@ public class Main extends Application {
             fadeOut.play();
         });
         wait.play();
+
         return splashScene;
     }
 
