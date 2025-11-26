@@ -3,13 +3,13 @@ package main;
 import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import data.PlayerDataManager;
@@ -26,6 +26,10 @@ public class Main extends Application {
     
     @Override
     public void start(Stage stage) {
+
+        // Load fonts
+        Font.loadFont(getClass().getResourceAsStream("/fonts/BoldPixels.ttf"), 48);
+
         this.primaryStage = stage;
         this.dataManager = new PlayerDataManager();
 
@@ -63,8 +67,9 @@ public class Main extends Application {
         centerPanel.getStyleClass().add("login-panel");
         
         // Title
-        Label titleLabel = new Label("🎣 Fishing Adventure");
+        Label titleLabel = new Label("Fishing Adventure");
         titleLabel.getStyleClass().add("title-label");
+        titleLabel.setText(titleLabel.getText().toUpperCase());
         
         // Username Label
         Label usernameLabel = new Label("Username:");
@@ -220,8 +225,10 @@ public class Main extends Application {
 
         // Center logo
         Label logo = new Label("FISHDA");
+        logo.setText(logo.getText().toUpperCase());
         logo.setId("splash-logo");
         StackPane.setAlignment(logo, Pos.CENTER);
+
 
         // Footer text
         Label footer = new Label("© 2025 Charlie Kirk Studio");
@@ -242,7 +249,7 @@ public class Main extends Application {
 
         // Scene
         Scene splashScene = new Scene(splashLayout, 1280, 720);
-        splashScene.getStylesheets().addAll(getClass().getResource("/stylesheet/styles.css").toExternalForm());
+        splashScene.getStylesheets().add(getClass().getResource("/stylesheet/styles.css").toExternalForm());
 
         // Fade in effect
         FadeTransition fadeIn = new FadeTransition(Duration.seconds(1), splashLayout);
