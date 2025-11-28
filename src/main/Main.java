@@ -28,7 +28,10 @@ public class Main extends Application {
     public void start(Stage stage) {
 
         // Load fonts
-        Font.loadFont(getClass().getResourceAsStream("/fonts/BoldPixels.ttf"), 48);
+        Font.loadFont(getClass().getResourceAsStream("/fonts/VT323-Regular.ttf"), 16);       // dialogue / body text
+        Font.loadFont(getClass().getResourceAsStream("/fonts/dogicapixelbold.ttf"), 20);  // UI / labels
+        Font.loadFont(getClass().getResourceAsStream("/fonts/BitPotion.ttf"), 28); // titles / splash
+
 
         this.primaryStage = stage;
         this.dataManager = new PlayerDataManager();
@@ -60,10 +63,10 @@ public class Main extends Application {
         }
         
         // Center panel with translucent background
-        VBox centerPanel = new VBox(12); // tighter spacing (12 instead of 20)
+        VBox centerPanel = new VBox(14);
         centerPanel.setAlignment(Pos.CENTER);
-        centerPanel.setMaxWidth(550);
-        centerPanel.setMaxHeight(250);
+        centerPanel.setMaxWidth(700);
+        centerPanel.setMaxHeight(380);
         centerPanel.getStyleClass().add("login-panel");
         
         // Title
@@ -99,7 +102,7 @@ public class Main extends Application {
         errorLabel.setAlignment(Pos.CENTER);
         
         // Buttons
-        HBox buttonBox = new HBox(15);
+        HBox buttonBox = new HBox(10);
         buttonBox.setAlignment(Pos.CENTER);
         
         Button loginButton = new Button("Login");

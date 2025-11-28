@@ -2,29 +2,10 @@
    FISHING ADVENTURE - GLOBAL STYLES
    ======================================== */
 
-/* Custom font */
-@font-face {
-    font-family: 'BoldPixels';
-    src: url('../fonts/BoldPixels.ttf');
-}
-
-/* Root colors for consistency */
-:root {
-    -fx-primary-color: #2C5F7F;
-    -fx-primary-dark: #1A3A4D;
-    -fx-success-color: #4CAF50;
-    -fx-info-color: #2196F3;
-    -fx-warning-color: #FF9800;
-    -fx-danger-color: #F44336;
-    -fx-light-bg: rgba(255, 255, 255, 0.85);
-    -fx-dark-bg: rgba(0, 0, 0, 0.7);
-    -fx-light-brown: rgba(210, 180, 140, 0.92);
-
-}
 
 /* Global pixel font */
 .pixel-font {
-    -fx-font-family: 'BoldPixels', 'Courier New', monospace;
+    -fx-font-family: 'VT323'
 }
 
 /* ========================================
@@ -35,23 +16,24 @@
 .login-background {
     -fx-background-color: linear-gradient(
             to bottom,
-            #8ac7c0,   /* soft aqua blue (water) */
-            #b8e2d2,   /* pale mint (shallow water) */
-            #f4ecd7    /* warm cream (sunrise light) */
+            #8ac7c0,
+            #b8e2d2,
+            #f4ecd7
     );
 }
 
 .login-panel {
-    -fx-background-color: rgba(255, 250, 235, 0.97); /* gentle cream */
-    -fx-background-radius: 18px;
+    -fx-background-color: rgba(255, 248, 230, 0.95);
+    -fx-background-radius: 20px;
     -fx-border-radius: 18px;
-    -fx-border-color: #b58a52;
+    -fx-border-color: rgba(181, 138, 82, 0.85);
     -fx-border-width: 3px;
-    -fx-effect: dropshadow(gaussian, rgba(80, 60, 40, 0.28), 16, 0, 0, 3);
-    -fx-padding: 24px 20px;
+    -fx-effect: dropshadow(gaussian, rgba(80,60,40,0.22), 12, 0.15, 0, 3),
+    innershadow(gaussian, rgba(240,220,200,0.25), 4, 0, 0, 2);
+    -fx-padding: 32px 28px 34px 28px;
     -fx-opacity: 0.99;
-    -fx-max-width: 550px;
-    -fx-max-height: 250px;
+    -fx-max-width: 640px;
+    -fx-max-height: 320px;
 }
 
 /* ===============================
@@ -59,12 +41,14 @@
    =============================== */
 
 .title-label {
-    -fx-font-family: 'BoldPixels', 'Courier New', monospace;
-    -fx-font-size: 40px;
+    -fx-font-family: 'Dogica Pixel';
+    -fx-font-size: 32px;
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
     -fx-font-weight: bold;
-    -fx-text-fill: linear-gradient(to bottom, #ffe27d, #f8a851); /* golden sunlight */
+    -fx-text-fill: linear-gradient(to bottom, #ffe27d, #f8a851);
     -fx-effect: dropshadow(gaussian, rgba(120, 60, 20, 0.7), 5, 0, 2, 2);
-    -fx-padding: 0 0 6px 0;
+    -fx-padding: 0 0 16px 0;
 }
 
 /* ===============================
@@ -72,11 +56,13 @@
    =============================== */
 
 .field-label {
-    -fx-font-family: 'BoldPixels', 'Courier New', monospace;
-    -fx-font-size: 14px;
+    -fx-font-family: 'Dogica Pixel';
+    -fx-font-size: 13px;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
     -fx-font-weight: 600;
-    -fx-text-fill: #7a5c3c; /* earthy brown */
-    -fx-padding: 0 0 4px 0;
+    -fx-text-fill: #7a5c3c;
+    -fx-padding: 4px 0 6px 0;
 }
 
 /* ===============================
@@ -84,37 +70,43 @@
    =============================== */
 
 .input-field {
-    -fx-padding: 10px;
-    -fx-background-color: rgba(255, 250, 240, 0.95);
-    -fx-background-radius: 10px;
-    -fx-border-radius: 10px;
-    -fx-border-color: #d4a373;
+    -fx-background-color: rgba(255, 250, 240, 0.98);
+    -fx-border-color: rgba(212,163,115,0.85);
     -fx-border-width: 2px;
-    -fx-font-family: 'BoldPixels', 'Courier New', monospace;
+    -fx-font-family: 'Dogica Pixel';
     -fx-font-size: 14px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 2, 0, 0, 1);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-padding: 12px 14px;
+    -fx-background-radius: 12px;
+    -fx-border-radius: 12px;
+    -fx-border-color: #d4a373;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 2, 0, 0, 1);
 }
 
 .input-field:focused {
     -fx-border-color: #a1c45a; /* green accent for focus */
-    -fx-effect: dropshadow(gaussian, rgba(161,196,90,0.4), 5, 0, 0, 0);
+    -fx-effect: dropshadow(gaussian, rgba(161,196,90,0.35), 4, 0, 0, 0),
+    innershadow(gaussian, rgba(240,230,210,0.2), 2, 0, 0, 1);
 }
 
 .error-label {
-    -fx-text-fill: #f54e42; /* warm red */
-    -fx-font-family: 'BoldPixels', 'Courier New', monospace;
+    -fx-text-fill: #f54e42;
+    -fx-font-family: 'Dogica Pixel';
     -fx-font-size: 12px;
-    -fx-font-weight: bold;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 1, 1);
     -fx-padding: 2px 0;
 }
 
 .success-label {
-    -fx-text-fill: #a1c45a; /* earthy green */
-    -fx-font-family: 'BoldPixels', 'Courier New', monospace;
-    -fx-font-size: 11px;
-    -fx-font-weight: bold;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 1, 0, 0.5, 0.5);
+    -fx-text-fill: #a1c45a;
+    -fx-font-family: 'Dogica Pixel';
+    -fx-font-size: 12px;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 1, 1);
     -fx-padding: 2px 0;
 }
 
@@ -124,27 +116,35 @@
 
 /* Logo text */
 #splash-logo {
-    -fx-font-family: 'BoldPixels', 'Courier New', monospace;
-    -fx-font-size: 64px;
-    -fx-font-weight: bold;
+    -fx-font-family: 'BitPotion';
+    -fx-font-size: 150px;
+    -fx-scale-x: 1.25;
+    -fx-scale-y: 1.15;
     -fx-text-fill: linear-gradient(to bottom, #ffe27d, #f8a851);
-    -fx-effect: dropshadow(gaussian, rgba(120, 60, 20, 0.6), 6, 0, 3, 3);
+    -fx-effect:
+            dropshadow(gaussian, rgba(120,60,20,0.6), 6, 0, 3, 3),
+            dropshadow(gaussian, rgba(255,245,180,0.4), 20, 0, 0, 0);
 }
 /* Footer / Copyright */
 #splash-footer {
-    -fx-font-family: 'BoldPixels', 'Courier New', monospace;
+    -fx-font-family: 'Dogica Pixel';
     -fx-font-size: 14px;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
     -fx-text-fill: rgba(255, 245, 220, 0.9);
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 4, 0, 1, 1);
-    -fx-padding: 0 0 20 0;
+    -fx-padding: 8px 0 20px 0;
 }
 #splash-overlay{
-    -fx-background-color: rgba(245, 225, 179, 0.6);
+    -fx-background-color: radial-gradient(
+            center 50% 50%, radius 100%,
+            rgba(245,225,179,0.6), rgba(245,225,179,0.3)
+    );
 }
 
 #splash-footer-bg{
     -fx-background-color: rgba(0,0,0,0.3);
-    -fx-background-radius: 5;
+    -fx-background-radius: 6;
 }
 
 /* ========================================
@@ -152,30 +152,32 @@
    ======================================== */
 
 .btn {
-    -fx-font-family: 'BoldPixels', 'Courier New', monospace;
+    -fx-font-family: 'Dogica Pixel';
     -fx-font-size: 13px;
-    -fx-font-weight: bold;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
     -fx-background-radius: 8px;
     -fx-border-radius: 8px;
-    -fx-padding: 6px 12px;
+    -fx-padding: 8px 16px;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 0, 1);
     -fx-cursor: hand;
 }
 
 .btn:hover {
-    -fx-scale-x: 1.05;
-    -fx-scale-y: 1.05;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 3, 0, 0, 1);
+    -fx-scale-x: 1.08;
+    -fx-scale-y: 1.08;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.28), 3, 0, 0, 2);
 }
 
 .btn:pressed {
-    -fx-scale-x: 0.98;
-    -fx-scale-y: 0.98;
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 3, 0, 0, 1);
 }
 
 .btn-success {
     -fx-background-color: linear-gradient(to bottom, #a1c45a, #7c9b42);
+    -fx-background-radius: 10px;
     -fx-text-fill: #fff;
 }
 
