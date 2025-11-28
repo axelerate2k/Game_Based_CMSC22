@@ -212,6 +212,9 @@ public class Main extends Application {
 
     private Scene makeSplashScene(Stage stage) {
 
+        // Attach Logo
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/backgrounds/login/fishdaIcon.png")));
+
         // Create the splash layout
         StackPane splashLayout = new StackPane();
 
