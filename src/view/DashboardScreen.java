@@ -283,7 +283,7 @@ public class DashboardScreen {
         } else {
             fishingLabel.setText("You Fished!");
             fishingLabel.setVisible(true);
-            Timeline hideSuccess = new Timeline(new KeyFrame(Duration.seconds(2), e -> fishingLabel.setVisible(false)));
+            Timeline hideSuccess = new Timeline(new KeyFrame(Duration.seconds(3), e -> fishingLabel.setVisible(false)));
             startFishingAnimation();
             System.out.println("Starting fishing with: " + player.getSelectedBait().getName());
             player.useBait();
