@@ -28,10 +28,10 @@ public class Player {
         inventory.add(new InventoryItem("Rod", "Bamboo Rod", 1));
         inventory.add(new InventoryItem("Bait", "Basic Worm", 20));
         inventory.add(new InventoryItem("Bait", "Enhanced Bait", 10));
-        inventory.add(new InventoryItem("Fish", "Anglerfish", 1, "Common"));
-        inventory.add(new InventoryItem("Fish", "Red Salmon", 1, "Rare"));
-        inventory.add(new InventoryItem("Fish", "Swordfish", 1, "Legendary"));
-        inventory.add(new InventoryItem("Bait", "Rare Lure", 5));
+        inventory.add(new InventoryItem("Fish", "Anglerfish", 5, "Common"));
+        inventory.add(new InventoryItem("Fish", "Red Salmon", 6, "Rare"));
+        inventory.add(new InventoryItem("Fish", "Swordfish", 8, "Legendary"));
+        inventory.add(new InventoryItem("Bait", "Rare Lure", 10));
         inventory.add(new InventoryItem("Rod", "Wooden Rod", 1));
         inventory.add(new InventoryItem("Fish", "Oarfish", 1, "Common"));
         // Leave some empty slots (inventory size = 15)

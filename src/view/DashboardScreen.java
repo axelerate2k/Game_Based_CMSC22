@@ -392,16 +392,21 @@ public class DashboardScreen {
                 Button slotBtn = new Button();
                 slotBtn.setPrefSize(80, 80);
 
-                InventoryItem item = player.getItemAt(slotIndex);
+                InventoryItem item = null;
+                if (slotIndex < currentInventory.size()) {
+                    item = currentInventory.get(slotIndex);
+                }
 
-                if (item != null) {
+                final InventoryItem finalItem = item;
+
+                if (finalItem != null) {
                     slotBtn.getStyleClass().add("inventory-slot");
 
-                    if (item.getType().equals("Fish") && item.getRarity() != null) {
-                        slotBtn.getStyleClass().add("rarity-" + item.getRarity().toLowerCase());
+                    if (finalItem.getType().equals("Fish") && finalItem.getRarity() != null) {
+                        slotBtn.getStyleClass().add("rarity-" + finalItem.getRarity().toLowerCase());
                     }
 
-                    Image sprite = getSpriteForItem(item, baitSprites, rodSprites, fishSprites);
+                    Image sprite = getSpriteForItem(finalItem, baitSprites, rodSprites, fishSprites);
                     if (sprite != null) {
                         ImageView iv = new ImageView(sprite);
                         iv.setFitWidth(56);
@@ -411,7 +416,7 @@ public class DashboardScreen {
                         slotBtn.setGraphic(iv);
                     }
 
-                    if (item.equals(player.getSelectedBait())) {
+                    if (finalItem.equals(player.getSelectedBait())) {
                         slotBtn.getStyleClass().add("inventory-slot-selected");
                     }
 
@@ -423,8 +428,8 @@ public class DashboardScreen {
                 slotPane.getChildren().add(slotBtn);
 
                 // Add quantity label ON TOP of button (if applicable)
-                if (item != null && item.getType().equals("Bait") && item.getQuantity() > 1) {
-                    Label qtyLabel = new Label("×" + item.getQuantity());
+                if (finalItem != null && (finalItem.getType().equals("Bait") || finalItem.getType().equals("Fish")) && finalItem.getQuantity() > 1) {
+                    Label qtyLabel = new Label("×" + finalItem.getQuantity());
                     qtyLabel.getStyleClass().add("item-quantity-label");
                     qtyLabel.setMouseTransparent(true); // Let clicks pass through to button
                     StackPane.setAlignment(qtyLabel, Pos.BOTTOM_RIGHT);
@@ -432,8 +437,9 @@ public class DashboardScreen {
                     slotPane.getChildren().add(qtyLabel); // Add AFTER button
                 }
 
-                slotBtn.setOnAction(e -> handleSlotClick(slotIndex, item));
-                setupDragAndDrop(slotBtn, slotIndex, item);
+                // Use finalItem in event handlers
+                slotBtn.setOnAction(e -> handleSlotClick(slotIndex, finalItem));
+                setupDragAndDrop(slotBtn, slotIndex, finalItem);
 
                 grid.add(slotPane, j, i);
             }
