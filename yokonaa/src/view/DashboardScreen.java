@@ -17,6 +17,7 @@ import model.Player;
 import model.InventoryItem;
 import utils.SpriteLoader;
 import javafx.scene.input.*;
+import java.util.List; 
 
 public class DashboardScreen {
 
@@ -236,6 +237,9 @@ public class DashboardScreen {
         coinsLabel.setText("💰 " + player.getCoins());
         xpLabel.setText("⭐ " + player.getXp());
         baitsLabel.setText("🐛 " + player.getTotalBaits());
+        
+        // Ensure the panel is refreshed after a stat change (like selling)
+        refreshActivePanel();
     }
 
     // ========== INVENTORY SYSTEM ==========
@@ -252,6 +256,8 @@ public class DashboardScreen {
         Image[] baitSprites = SpriteLoader.loadBaitSprites();
         Image[] rodSprites = SpriteLoader.loadRodSprites();
         Image[] fishSprites = SpriteLoader.loadFishSprites();
+        
+        List<InventoryItem> currentInventory = player.getInventory();
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -263,16 +269,23 @@ public class DashboardScreen {
                 Button slotBtn = new Button();
                 slotBtn.setPrefSize(80, 80);
                 
-                InventoryItem item = player.getItemAt(slotIndex);
+                InventoryItem item = null;
+                if (slotIndex < currentInventory.size()) {
+                    item = currentInventory.get(slotIndex);
+                }
                 
-                if (item != null) {
+                // --- FIX: Introduce effectively final variable for use in lambda ---
+                final InventoryItem finalItem = item;
+                // --- END FIX ---
+                
+                if (finalItem != null) {
                     slotBtn.getStyleClass().add("inventory-slot");
                     
-                    if (item.getType().equals("Fish") && item.getRarity() != null) {
-                        slotBtn.getStyleClass().add("rarity-" + item.getRarity().toLowerCase());
+                    if (finalItem.getType().equals("Fish") && finalItem.getRarity() != null) {
+                        slotBtn.getStyleClass().add("rarity-" + finalItem.getRarity().toLowerCase());
                     }
                     
-                    Image sprite = getSpriteForItem(item, baitSprites, rodSprites, fishSprites);
+                    Image sprite = getSpriteForItem(finalItem, baitSprites, rodSprites, fishSprites);
                     if (sprite != null) {
                         ImageView iv = new ImageView(sprite);
                         iv.setFitWidth(56);
@@ -282,7 +295,7 @@ public class DashboardScreen {
                         slotBtn.setGraphic(iv);
                     }
                     
-                    if (item.equals(player.getSelectedBait())) {
+                    if (finalItem.equals(player.getSelectedBait())) {
                         slotBtn.getStyleClass().add("inventory-slot-selected");
                     }
                     
@@ -294,8 +307,8 @@ public class DashboardScreen {
                 slotPane.getChildren().add(slotBtn);
                 
                 // Add quantity label ON TOP of button (if applicable)
-                if (item != null && item.getType().equals("Bait") && item.getQuantity() > 1) {
-                    Label qtyLabel = new Label("×" + item.getQuantity());
+                if (finalItem != null && (finalItem.getType().equals("Bait") || finalItem.getType().equals("Fish")) && finalItem.getQuantity() > 1) {
+                    Label qtyLabel = new Label("×" + finalItem.getQuantity());
                     qtyLabel.getStyleClass().add("item-quantity-label");
                     qtyLabel.setMouseTransparent(true); // Let clicks pass through to button
                     StackPane.setAlignment(qtyLabel, Pos.BOTTOM_RIGHT);
@@ -303,8 +316,9 @@ public class DashboardScreen {
                     slotPane.getChildren().add(qtyLabel); // Add AFTER button
                 }
                 
-                slotBtn.setOnAction(e -> handleSlotClick(slotIndex, item));
-                setupDragAndDrop(slotBtn, slotIndex, item);
+                // Use finalItem in event handlers
+                slotBtn.setOnAction(e -> handleSlotClick(slotIndex, finalItem));
+                setupDragAndDrop(slotBtn, slotIndex, finalItem);
                 
                 grid.add(slotPane, j, i);
             }
@@ -351,14 +365,18 @@ public class DashboardScreen {
 
                 InventoryItem item = slotIndex < shopItems.length ? shopItems[slotIndex] : null;
 
-                if (item != null) {
+                // --- FIX: Introduce effectively final variable for use in lambda ---
+                final InventoryItem finalItem = item;
+                // --- END FIX ---
+
+                if (finalItem != null) {
                     slotBtn.getStyleClass().add("inventory-slot");
 
-                    if (item.getType().equals("Fish") && item.getRarity() != null) {
-                        slotBtn.getStyleClass().add("rarity-" + item.getRarity().toLowerCase());
+                    if (finalItem.getType().equals("Fish") && finalItem.getRarity() != null) {
+                        slotBtn.getStyleClass().add("rarity-" + finalItem.getRarity().toLowerCase());
                     }
 
-                    Image sprite = getSpriteForItem(item, baitSprites, rodSprites, fishSprites);
+                    Image sprite = getSpriteForItem(finalItem, baitSprites, rodSprites, fishSprites);
                     if (sprite != null) {
                         ImageView iv = new ImageView(sprite);
                         iv.setFitWidth(56);
@@ -375,8 +393,8 @@ public class DashboardScreen {
                 slotPane.getChildren().add(slotBtn);
 
                 // Quantity label for stackable items (baits)
-                if (item != null && item.getType().equals("Bait") && item.getQuantity() > 1) {
-                    Label qtyLabel = new Label("×" + item.getQuantity());
+                if (finalItem != null && finalItem.getType().equals("Bait") && finalItem.getQuantity() > 1) {
+                    Label qtyLabel = new Label("×" + finalItem.getQuantity());
                     qtyLabel.getStyleClass().add("item-quantity-label");
                     qtyLabel.setMouseTransparent(true);
                     StackPane.setAlignment(qtyLabel, Pos.BOTTOM_RIGHT);
@@ -386,8 +404,8 @@ public class DashboardScreen {
 
                 // Click event for buying
                 slotBtn.setOnAction(e -> {
-                    if (item != null) {
-                        System.out.println("Buying item: " + item.getName());
+                    if (finalItem != null) {
+                        System.out.println("Buying item: " + finalItem.getName());
                         // TODO: Implement purchase logic
                     }
                 });
@@ -431,8 +449,8 @@ public class DashboardScreen {
         
         if (item.getType().equals("Bait")) {
             player.setSelectedBait(item);
-            player.setSelectedSlotIndex(slotIndex);
             
+            // Toggle panel twice to force a refresh (redraw the selection border)
             if (activePanelType != null && activePanelType.equals("inventory")) {
                 togglePanel("inventory");
                 togglePanel("inventory");
@@ -496,7 +514,7 @@ public class DashboardScreen {
         descLabel.setMaxWidth(350);
         descLabel.setAlignment(Pos.CENTER);
         
-        if (item.getType().equals("Bait")) {
+        if (item.getType().equals("Bait") || item.getType().equals("Fish")) {
             Label qtyLabel = new Label("Quantity: " + item.getQuantity());
             qtyLabel.getStyleClass().add("modal-content-label");
             modalPanel.getChildren().add(qtyLabel);
@@ -509,7 +527,7 @@ public class DashboardScreen {
             modalPanel.getChildren().add(sellLabel);
         }
         
-        if (item.getType().equals("Rod") && !item.getName().equals("Bamboo Rod")) {
+        if (item.getType().equals("Rod") && !item.getName().equals(player.getEquippedRod())) {
             Label sellLabel = new Label("💰 Sell: " + item.getRodSellValue() + " coins");
             sellLabel.getStyleClass().add("modal-content-label");
             sellLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #2E7D32;");
@@ -528,13 +546,19 @@ public class DashboardScreen {
                 player.setEquippedRod(item.getName());
                 System.out.println("Equipped: " + item.getName());
                 sceneRoot.getChildren().remove(modalOverlay);
+                // Refresh inventory to show equipped status
+                if (activePanelType != null && activePanelType.equals("inventory")) {
+                    togglePanel("inventory");
+                    togglePanel("inventory");
+                }
             });
             buttonBox.getChildren().add(equipBtn);
         }
         
+        // Only allow selling non-equipped Rods and any Fish
         if (item.getType().equals("Fish") || 
-            (item.getType().equals("Rod") && !item.getName().equals("Bamboo Rod"))) {
-            Button sellBtn = new Button("💰 Sell");
+            (item.getType().equals("Rod") && !item.getName().equals(player.getEquippedRod()))) {
+            Button sellBtn = new Button("💰 Sell 1x"); // Changed label to sell 1x
             sellBtn.getStyleClass().addAll("modal-btn", "modal-btn-danger");
             sellBtn.setOnAction(e -> {
                 handleSellItem(item, slotIndex);
@@ -570,25 +594,48 @@ public class DashboardScreen {
         }
     }
 
+    /**
+     * Handles selling by using the Player.changeItemQuantity or Player.removeFromInventory.
+     * This ensures the player's internal List<InventoryItem> is correctly updated,
+     * which is essential for saving/loading.
+     */
     private void handleSellItem(InventoryItem item, int slotIndex) {
         if (item.getType().equals("Fish")) {
-            int coins = item.getSellCoins();
-            int xp = item.getSellXP();
-            player.addCoins(coins);
-            player.addXp(xp);
-            player.getStats().addMoneyEarned(coins);
-            player.getStats().addXpEarned(xp);
-            
-            System.out.println("Sold " + item.getName() + " for " + coins + " coins + " + xp + " XP");
+            // Fish are stackable. The Model's changeItemQuantity handles reducing the count
+            // and removing the item completely if the quantity reaches zero.
+            if (player.changeItemQuantity(item.getName(), -1)) {
+                int coins = item.getSellCoins();
+                int xp = item.getSellXP();
+                
+                player.addCoins(coins);
+                player.addXp(xp);
+                player.getStats().addMoneyEarned(coins);
+                player.getStats().addXpEarned(xp);
+                
+                System.out.println("Sold 1x " + item.getName() + " for " + coins + " coins + " + xp + " XP");
+            } else {
+                System.err.println("Sell failed: Could not reduce fish quantity.");
+                return;
+            }
         } else if (item.getType().equals("Rod")) {
+            // Rods are non-stackable, remove the entire object
+            
+            // Safety check: Cannot sell equipped rod (UI button should prevent this, but check here too)
+            if (item.getName().equals(player.getEquippedRod())) {
+                 System.err.println("Sell failed: Cannot sell equipped rod.");
+                 return;
+            }
+            
             int coins = item.getRodSellValue();
+            player.removeFromInventory(item);
             player.addCoins(coins);
+            
             System.out.println("Sold " + item.getName() + " for " + coins + " coins");
         }
         
-        player.setItemAt(slotIndex, null);
-        updateStats();
+        updateStats(); // Recalculates stats and refreshes panel
         
+        // This is now redundant since updateStats calls refreshActivePanel, but keeping for safety
         if (activePanelType != null && activePanelType.equals("inventory")) {
             togglePanel("inventory");
             togglePanel("inventory");
@@ -596,8 +643,9 @@ public class DashboardScreen {
     }
 
     private void setupDragAndDrop(Button slotBtn, int slotIndex, InventoryItem item) {
+        if (item == null) return; // Prevent drag/drop setup on empty slots
+
         slotBtn.setOnDragDetected(e -> {
-            if (item == null) return;
             
             Dragboard db = slotBtn.startDragAndDrop(TransferMode.MOVE);
             ClipboardContent content = new ClipboardContent();
@@ -635,12 +683,14 @@ public class DashboardScreen {
                 int sourceIndex = Integer.parseInt(db.getString());
                 int targetIndex = slotIndex;
                 
-                player.swapItems(sourceIndex, targetIndex);
-                
-                if (player.getSelectedSlotIndex() == sourceIndex) {
-                    player.setSelectedSlotIndex(targetIndex);
-                } else if (player.getSelectedSlotIndex() == targetIndex) {
-                    player.setSelectedSlotIndex(sourceIndex);
+                // Assuming you have a way to swap elements in the Player's inventory list:
+                List<InventoryItem> inventory = player.getInventory();
+                if (sourceIndex < inventory.size() && targetIndex < inventory.size()) {
+                    // Simple swap
+                    InventoryItem item1 = inventory.get(sourceIndex);
+                    InventoryItem item2 = inventory.get(targetIndex);
+                    inventory.set(targetIndex, item1);
+                    inventory.set(sourceIndex, item2);
                 }
                 
                 if (activePanelType != null && activePanelType.equals("inventory")) {
@@ -665,16 +715,16 @@ public class DashboardScreen {
 
     public void refreshActivePanel() {
         if (activePanelType != null) {
-            if (activePanelType.equals("inventory")) {
-                togglePanel("inventory");
-                togglePanel("inventory");
-            }
+            // Re-render the panel
+            String currentPanel = activePanelType;
+            closePanel();
+            togglePanel(currentPanel);
         }
     }
 
     public void updatePlayerStats() {
         updateStats();
-        refreshActivePanel();
+        // updateStats already calls refreshActivePanel
     }
 
     // =======================================================

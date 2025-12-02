@@ -1,5 +1,5 @@
 package main;
-
+// tite si szhan 1:06am to
 import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
 import javafx.application.Application;

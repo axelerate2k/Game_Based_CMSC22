@@ -75,13 +75,18 @@ public class PlayerDataManager {
         String filename = DATA_FOLDER + "/player_" + username + ".txt";
         File file = new File(filename);
 
-        // If no save file exists, return a fresh player
+        // If no save file exists, return a fresh player (which includes default inventory)
         if (!file.exists()) {
             return new Player(username); 
         }
 
         Player player = new Player(username);
 
+        // --- FIX START: Clear the default inventory ---
+        // Any items set in the Player constructor must be removed before loading saved data.
+        player.getInventory().clear();
+        // --- FIX END ---
+        
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -157,13 +162,16 @@ public class PlayerDataManager {
                                 item = new InventoryItem(itemType, itemName, qty);
                             }
                             
-                            player.addItem(item);
+                            player.addToInventory(item);
                         }
                         break;
                 }
             }
         } catch (IOException | NumberFormatException e) {
             System.err.println("❌ Error loading save file: " + e.getMessage());
+            // If loading fails, re-initialize the player's inventory to defaults
+            // This prevents a crash, but the user loses saved inventory data if it was corrupted.
+            player = new Player(username); 
         }
 
         return player;
