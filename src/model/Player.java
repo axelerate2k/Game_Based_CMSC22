@@ -9,10 +9,10 @@ public class Player {
     private int xp;
     private String equippedRod;
     private List<InventoryItem> inventory;
-    private PlayerStats stats;
+    private PlayerStats stats; // Assumes model.PlayerStats is a separate file
     private long lastRewardClaim;
     private InventoryItem selectedBait;
-    
+
     public Player(String username) {
         this.username = username;
         this.coins = 50;
@@ -22,39 +22,114 @@ public class Player {
         this.stats = new PlayerStats();
         this.lastRewardClaim = 0;
         this.selectedBait = null;
-        
+
         // Add starter items
         inventory.add(new InventoryItem("Rod", "Bamboo Rod", 1));
         inventory.add(new InventoryItem("Bait", "Basic Worm", 20));
     }
-    
+
+    // --- ITEM MANAGEMENT LOGIC ---
+
+    /**
+     * Helper method to find an InventoryItem object by its name.
+     */
+    public InventoryItem findItemByName(String name) {
+        for (InventoryItem item : inventory) {
+            if (item.getName().equals(name)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Changes the quantity of an item. Used for selling/using stackable items (Fish/Bait).
+     * @param itemName The name of the item (e.g., "Red Salmon").
+     * @param quantityChange The amount to add (positive) or remove (negative).
+     * @return True if the quantity was successfully changed, false otherwise.
+     */
+    public boolean changeItemQuantity(String itemName, int quantityChange) {
+        InventoryItem item = findItemByName(itemName);
+
+        if (item == null) {
+            // Cannot reduce quantity of an item the player doesn't have
+            return quantityChange > 0;
+        }
+
+        int currentQty = item.getQuantity();
+        int newQty = currentQty + quantityChange;
+
+        if (newQty < 0) {
+            // Player doesn't have enough to fulfill the reduction
+            return false;
+        }
+
+        if (newQty == 0) {
+            // Remove the item entirely if the quantity hits zero
+            inventory.remove(item);
+
+            // If the item removed was the selected bait, deselect it.
+            if (item == this.selectedBait) {
+                this.selectedBait = null;
+            }
+            return true;
+        }
+
+        // Otherwise, just update the quantity
+        item.setQuantity(newQty);
+        return true;
+    }
+
+    // --- END ITEM MANAGEMENT LOGIC ---
+
     // Getters and Setters
     public String getUsername() { return username; }
     public int getCoins() { return coins; }
     public void setCoins(int coins) { this.coins = coins; }
     public void addCoins(int amount) { this.coins += amount; }
     public void removeCoins(int amount) { this.coins -= amount; }
-    
+
     public int getXp() { return xp; }
     public void setXp(int xp) { this.xp = xp; }
     public void addXp(int amount) { this.xp += amount; }
     public void removeXp(int amount) { this.xp -= amount; }
-    
+
     public String getEquippedRod() { return equippedRod; }
     public void setEquippedRod(String rod) { this.equippedRod = rod; }
-    
+
     public List<InventoryItem> getInventory() { return inventory; }
-    public void addToInventory(InventoryItem item) { inventory.add(item); }
+
+    /**
+     * Adds an item to the inventory. If an existing stackable item is found,
+     * the quantity is added to the existing stack. Otherwise, the item is added.
+     * Unique items (like Rods) will not be added if a matching item already exists.
+     */
+    public void addToInventory(InventoryItem item) {
+        InventoryItem existingItem = findItemByName(item.getName());
+
+        if (existingItem != null) {
+            // Item already exists. Only stack Bait and Fish.
+            if (item.getType().equals("Bait") || item.getType().equals("Fish")) {
+                existingItem.setQuantity(existingItem.getQuantity() + item.getQuantity());
+            }
+            // If the item is a unique equipment (like a Rod) and already exists,
+            // we do nothing to prevent duplicates.
+        } else {
+            // Item does not exist. Add it regardless of type.
+            inventory.add(item);
+        }
+    }
+
     public void removeFromInventory(InventoryItem item) { inventory.remove(item); }
-    
+
     public PlayerStats getStats() { return stats; }
-    
+
     public long getLastRewardClaim() { return lastRewardClaim; }
     public void setLastRewardClaim(long timestamp) { this.lastRewardClaim = timestamp; }
-    
+
     public InventoryItem getSelectedBait() { return selectedBait; }
     public void setSelectedBait(InventoryItem bait) { this.selectedBait = bait; }
-    
+
     // Get total bait count
     public int getTotalBaits() {
         int total = 0;
@@ -65,80 +140,22 @@ public class Player {
         }
         return total;
     }
-    
-    // Get bait by name
+
+    // Get bait by name - uses the robust findItemByName helper
     public InventoryItem getBait(String baitName) {
-        for (InventoryItem item : inventory) {
-            if (item.getType().equals("Bait") && item.getName().equals(baitName)) {
-                return item;
-            }
-        }
-        return null;
+        return findItemByName(baitName);
     }
-    
-    // Use one bait
+
+    // Use one bait - uses the new changeItemQuantity method
     public boolean useBait() {
         if (selectedBait != null && selectedBait.getQuantity() > 0) {
-            selectedBait.setQuantity(selectedBait.getQuantity() - 1);
-            if (selectedBait.getQuantity() == 0) {
-                inventory.remove(selectedBait);
-                selectedBait = null;
-            }
-            return true;
+            // Delegate the quantity change logic to the new robust method
+            return changeItemQuantity(selectedBait.getName(), -1);
         }
         return false;
     }
-}
 
-// Inner class for player statistics
-class PlayerStats {
-    private int totalFishCaught;
-    private int totalMoneyEarned;
-    private int totalXpEarned;
-    private String bestCatch;
-    private String bestAnglerfish;
-    private String bestRedSalmon;
-    private String bestSwordfish;
-    private String bestOarfish;
-    private String bestShark;
-    
-    public PlayerStats() {
-        this.totalFishCaught = 0;
-        this.totalMoneyEarned = 0;
-        this.totalXpEarned = 0;
-        this.bestCatch = "None";
-        this.bestAnglerfish = "None";
-        this.bestRedSalmon = "None";
-        this.bestSwordfish = "None";
-        this.bestOarfish = "None";
-        this.bestShark = "None";
+    public void addItem(InventoryItem item) {
+        this.inventory.add(item);
     }
-    
-    public int getTotalFishCaught() { return totalFishCaught; }
-    public void incrementFishCaught() { this.totalFishCaught++; }
-    
-    public int getTotalMoneyEarned() { return totalMoneyEarned; }
-    public void addMoneyEarned(int amount) { this.totalMoneyEarned += amount; }
-    
-    public int getTotalXpEarned() { return totalXpEarned; }
-    public void addXpEarned(int amount) { this.totalXpEarned += amount; }
-    
-    public String getBestCatch() { return bestCatch; }
-    public void setBestCatch(String bestCatch) { this.bestCatch = bestCatch; }
-    
-    // Getters and setters for best catches per species
-    public String getBestAnglerfish() { return bestAnglerfish; }
-    public void setBestAnglerfish(String rarity) { this.bestAnglerfish = rarity; }
-    
-    public String getBestRedSalmon() { return bestRedSalmon; }
-    public void setBestRedSalmon(String rarity) { this.bestRedSalmon = rarity; }
-    
-    public String getBestSwordfish() { return bestSwordfish; }
-    public void setBestSwordfish(String rarity) { this.bestSwordfish = rarity; }
-    
-    public String getBestOarfish() { return bestOarfish; }
-    public void setBestOarfish(String rarity) { this.bestOarfish = rarity; }
-    
-    public String getBestShark() { return bestShark; }
-    public void setBestShark(String rarity) { this.bestShark = rarity; }
 }

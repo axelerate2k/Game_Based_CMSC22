@@ -1,14 +1,4 @@
 /* ========================================
-   FISHING ADVENTURE - GLOBAL STYLES
-   ======================================== */
-
-
-/* Global pixel font */
-.pixel-font {
-    -fx-font-family: 'VT323'
-}
-
-/* ========================================
    LOGIN SCREEN STYLES
    ======================================== */
 
@@ -111,7 +101,7 @@
 }
 
 /* ========================================
-   SPLASH SCREEN
+                SPLASH SCREEN
    ======================================== */
 
 /* Logo text */
@@ -148,7 +138,7 @@
 }
 
 /* ========================================
-   BUTTON STYLES
+                BUTTON STYLES
    ======================================== */
 
 .btn {
@@ -225,7 +215,7 @@
 }
 
 /* ========================================
-   DASHBOARD STYLES
+               DASHBOARD STYLES
    ======================================== */
 
 .dashboard-root {
@@ -243,7 +233,7 @@
     -fx-text-fill: white;
     -fx-font-size: 30px;
     -fx-font-weight: bold;
-    -fx-font-family: 'Pixel Operator';
+    -fx-font-family: 'BoldPixels', 'Courier New', monospace;
 }
 
 .stat-separator {
@@ -251,9 +241,8 @@
     -fx-font-size: 30px;
 }
 
-/* Left Side Panel (Light Brown) */
 /* ========================================
-   EPIC WOODEN SIDE PANEL
+                SIDE PANEL
    ======================================== */
 
 .side-panel {
@@ -268,7 +257,7 @@
 }
 
 .side-panel-title {
-    -fx-font-family: 'Pixel Operator';
+    -fx-font-family: 'BoldPixels', 'Courier New', monospace;
     -fx-font-size: 30px;
     -fx-font-weight: bold;
     -fx-text-fill: #f4d35e;
@@ -279,11 +268,11 @@
 }
 
 .side-panel-close-btn {
-    -fx-background-color: #a32e2e; /* Deep RPG Red */
-    -fx-text-fill: #f4d35e; /* Gold 'X' */
+    -fx-background-color: #a32e2e;
+    -fx-text-fill: #f4d35e;
     -fx-font-weight: bold;
     -fx-font-size: 20px;
-    -fx-background-radius: 50%; /* Makes it circular */
+    -fx-background-radius: 50%;
     -fx-border-radius: 50%;
     -fx-border-color: #362010;
     -fx-border-width: 3px;
@@ -293,8 +282,8 @@
 }
 
 .side-panel-close-btn:hover {
-    -fx-background-color: #c43e3e; /* Brighter red on hover */
-    -fx-effect: dropshadow(three-pass-box, #f4d35e, 10, 0, 0, 0); /* Gold glow on hover */
+    -fx-background-color: #c43e3e;
+    -fx-effect: dropshadow(three-pass-box, #f4d35e, 10, 0, 0, 0);
 }
 /* Bottom Navigation */
 .bottom-nav {
@@ -305,7 +294,7 @@
     -fx-border-width: 3 0 0 0;
 }
 
-.bag-btn {
+.nav-btn {
     -fx-background-color: #2C5F7F;
     -fx-text-fill: white;
     -fx-font-size: 20px;
@@ -313,8 +302,9 @@
     -fx-padding: 12 20;
     -fx-background-radius: 8;
     -fx-cursor: hand;
-    -fx-font-family: 'Pixel Operator';
+    -fx-font-family: 'BoldPixels', 'Courier New', monospace;
 }
+
 
 .nav-btn:hover {
     -fx-background-color: #3A7FA0;
@@ -329,38 +319,13 @@
     -fx-background-color: #45A049;
 }
 
-/* Go Fishing Button */
-.fishing-btn {
-    -fx-background-color: #FF6B35;
-    -fx-font-family: 'Pixel Operator';
-    -fx-text-fill: white;
-    -fx-font-size: 30px;
-    -fx-font-weight: bold;
-    -fx-padding: 20 30;
-    -fx-background-radius: 15;
-    -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 10, 0, 0, 4);
-
-}
-
-.fishing-btn:hover {
-    -fx-background-color: #FF8C5A;
-    -fx-scale-x: 1.05;
-    -fx-scale-y: 1.05;
-}
-
-.fishing-btn:pressed {
-    -fx-scale-x: 0.98;
-    -fx-scale-y: 0.98;
-}
-
 .fishing-warning {
     -fx-text-fill: #FFD700;
     -fx-font-size: 14px;
     -fx-background-color: rgba(0, 0, 0, 0.6);
     -fx-padding: 8 15;
     -fx-background-radius: 10;
-    -fx-font-family: 'Pixel Operator'
+    -fx-font-family: 'BoldPixels', 'Courier New', monospace;
 }
 
 /* fisherman sprite */
@@ -377,17 +342,8 @@
 }
 
 /* ========================================
-   INVENTORY STYLES (Future use)
+            INVENTORY STYLES
    ======================================== */
-
-/* ========================================
-   INVENTORY SOCKETS
-   ======================================== */
-
-/* ========================================
-   INVENTORY SOCKETS (FIXED)
-   ======================================== */
-
 .inventory-slot {
     -fx-background-color: #2b1a0e;
     -fx-border-color: #7c5636;
@@ -405,10 +361,11 @@
 }
 
 .inventory-slot:focused {
-     -fx-border-color: #f4d35e;
-     -fx-effect: dropshadow(three-pass-box, #f4d35e, 5, 0, 0, 0);
+    -fx-border-color: #f4d35e;
+    -fx-effect: dropshadow(three-pass-box, #f4d35e, 5, 0, 0, 0);
 }
 
+/* Helper to hide ugly default button styles if the image doesn't load */
 .inventory-slot-empty {
     -fx-background-color: #2b1a0e;
     -fx-border-color: #4a2e18;
@@ -431,7 +388,7 @@
 }
 
 /* ========================================
-   MODAL STYLES (Future use)
+                MODAL STYLES
    ======================================== */
 
 .modal-overlay {
@@ -452,7 +409,7 @@
 }
 
 /* ========================================
-   ANIMATION UTILITIES
+            ANIMATION UTILITIES
    ======================================== */
 
 .fade-in {
@@ -464,7 +421,7 @@
 }
 
 /* ========================================
-   SHOP STYLES (Future use)
+            SHOP STYLES
    ======================================== */
 
 .shop-card {
@@ -484,7 +441,7 @@
 }
 
 /* ========================================
-   PROGRESS BAR / TIMING GAME (Future use)
+        PROGRESS BAR / TIMING GAME
    ======================================== */
 
 .timing-bar {
@@ -500,4 +457,99 @@
 .sweet-spot {
     -fx-fill: #4CAF50;
     -fx-opacity: 0.7;
+}
+
+
+.inventory-slot-selected {
+    -fx-border-color: #4CAF50 !important;
+    -fx-border-width: 4px;
+    -fx-effect: dropshadow(three-pass-box, rgba(76, 175, 80, 0.8), 12, 0, 0, 0);
+}
+
+/* Quantity label on bait items */
+.item-quantity-label {
+    -fx-background-color: rgba(0, 0, 0, 0.85);
+    -fx-text-fill: #f4d35e;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 3 8;
+    -fx-background-radius: 8;
+    -fx-font-family: 'BoldPixels', 'Courier New', monospace;
+    -fx-border-color: #7c5636;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8;
+}
+
+/* ========================================
+                 MODAL STYLES
+   ======================================== */
+
+.modal-overlay {
+    -fx-background-color: rgba(0, 0, 0, 0.7);
+}
+
+.modal-panel {
+    -fx-background-color: linear-gradient(to bottom, #5e3e24 0%, #4a2e18 50%, #5e3e24 100%);
+    -fx-border-color: #362010;
+    -fx-border-width: 6px;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 16px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 25, 0, 0, 10);
+    -fx-padding: 30;
+}
+
+.modal-title {
+    -fx-font-family: 'BoldPixels', 'Courier New', monospace;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #f4d35e;
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.8), 2, 0, 2, 2);
+    -fx-padding: 0 0 10px 0;
+}
+
+.modal-content-label {
+    -fx-font-family: 'BoldPixels', 'Courier New', monospace;
+    -fx-font-size: 14px;
+    -fx-text-fill: #f5e1b3;
+    -fx-wrap-text: true;
+}
+
+.modal-btn {
+    -fx-background-color: #5e3e24;
+    -fx-text-fill: #f4d35e;
+    -fx-font-family: 'BoldPixels', 'Courier New', monospace;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-background-radius: 8;
+    -fx-border-color: #362010;
+    -fx-border-width: 2px;
+    -fx-border-radius: 8;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 4, 0, 0, 2);
+}
+
+.modal-btn:hover {
+    -fx-background-color: #7c5636;
+    -fx-effect: dropshadow(three-pass-box, #f4d35e, 8, 0, 0, 0);
+}
+
+.modal-btn-danger {
+    -fx-background-color: #a32e2e;
+    -fx-text-fill: #f5e1b3;
+}
+
+.modal-btn-danger:hover {
+    -fx-background-color: #c43e3e;
+    -fx-effect: dropshadow(three-pass-box, #ff6b6b, 8, 0, 0, 0);
+}
+
+.modal-btn-success {
+    -fx-background-color: #4a7c59;
+    -fx-text-fill: #f5e1b3;
+}
+
+.modal-btn-success:hover {
+    -fx-background-color: #5a9c6a;
+    -fx-effect: dropshadow(three-pass-box, #a1c45a, 8, 0, 0, 0);
 }

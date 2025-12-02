@@ -20,19 +20,20 @@ import javafx.util.Duration;
 import model.Player;
 import view.DashboardScreen;
 
+import java.net.URL;
 import java.util.Map;
 
 public class Main extends Application {
     
     private Stage primaryStage;
     private PlayerDataManager dataManager;
+    private Player currentPlayer;
     
     @Override
     public void start(Stage stage) {
 
         // Load fonts
-        Font.loadFont(getClass().getResourceAsStream("/fonts/PixelOperator-Bold.ttf"), 20);
-        Font.loadFont(getClass().getResourceAsStream("/fonts/PressStart2P.ttf"), 18);
+        Font.loadFont(getClass().getResourceAsStream("/fonts/BoldPixelsFont.ttf"), 20);
         Font.loadFont(getClass().getResourceAsStream("/fonts/PixelOperator.ttf"), 12);       // dialogue / inventory / body text
         Font.loadFont(getClass().getResourceAsStream("/fonts/dogicapixelbold.ttf"), 20);  // UI / labels
         Font.loadFont(getClass().getResourceAsStream("/fonts/BitPotion.ttf"), 28); // titles / splash
@@ -239,11 +240,14 @@ public class Main extends Application {
 
         if (dataManager.validateLogin(username, password)) {
             showSuccess(errorLabel,"Login successful!");
-            Player player = loadPlayerFromData(username, dataManager.loadPlayerData(username));
+            Player player = dataManager.loadGame(username);
+            this.currentPlayer = player;
 
+            // minimal pause
             PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
             pause.setOnFinished(e -> showDashboard(player));
             pause.play();
+
         } else {
             showError(errorLabel,"Invalid credentials!");
         }
@@ -258,23 +262,31 @@ public class Main extends Application {
         // Create the splash layout
         StackPane splashLayout = new StackPane();
 
-        // Background image
-        ImageView bg = new ImageView(new Image(getClass().getResourceAsStream("/backgrounds/splash/splashbg.png")));
-        bg.setFitWidth(1280);
-        bg.setFitHeight(720);
-        bg.setPreserveRatio(false);
+        ImageView bg = new ImageView();
+        try {
+            URL bgUrl = getClass().getResource("/backgrounds/splash/splashbg.png");
+            if (bgUrl != null) {
+                bg.setImage(new Image(bgUrl.toExternalForm()));
+                bg.setFitWidth(1280);
+                bg.setFitHeight(720);
+                bg.setPreserveRatio(false);
+            } else {
+                System.err.println("Could not find splash background image.");
+            }
+        } catch (Exception e) {
+            System.err.println("Error loading splash background: " + e.getMessage());
+        }
 
-        // Warm overlay
+        // Overlay
         Region overlay = new Region();
         overlay.setId("splash-overlay");
         overlay.setPrefSize(1280, 720);
 
-        // Center logo
+        // Center logo text
         Label logo = new Label("FISHDA");
         logo.setText(logo.getText().toUpperCase());
         logo.setId("splash-logo");
         StackPane.setAlignment(logo, Pos.CENTER);
-
 
         // Footer text
         Label footer = new Label("© 2025 Charlie Kirk Studio");
@@ -289,13 +301,23 @@ public class Main extends Application {
         StackPane footerContainer = new StackPane(footerBg, footer);
         StackPane.setAlignment(footerContainer, Pos.BOTTOM_CENTER);
 
-
         // Add to layout
         splashLayout.getChildren().addAll(bg, overlay, logo, footerContainer);
 
         // Scene
         Scene splashScene = new Scene(splashLayout, 1280, 720);
-        splashScene.getStylesheets().add(getClass().getResource("/stylesheet/styles.css").toExternalForm());
+
+        // Load external CSS file
+        try {
+            URL cssUrl = getClass().getResource("/stylesheet/styles.css");
+            if (cssUrl != null) {
+                splashScene.getStylesheets().add(cssUrl.toExternalForm());
+            } else {
+                System.err.println("ERROR: CSS file not found at /stylesheet/styles.css");
+            }
+        } catch (Exception e) {
+            System.err.println("Could not load CSS file for splash scene: " + e.getMessage());
+        }
 
         // Fade in effect
         FadeTransition fadeIn = new FadeTransition(Duration.seconds(1), splashLayout);
@@ -303,7 +325,7 @@ public class Main extends Application {
         fadeIn.setToValue(1);
         fadeIn.play();
 
-        // Wait 2 seconds, then fade out
+        // Fade out effect
         PauseTransition wait = new PauseTransition(Duration.seconds(2));
         wait.setOnFinished(e -> {
             FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), splashLayout);
@@ -346,7 +368,24 @@ public class Main extends Application {
         return player;
     }
 
-    
+
+    @Override
+    public void stop() {
+
+        // Check if a player object is currently loaded
+        if (currentPlayer != null) {
+            // THIS MUST BE PRESENT TO RESOLVE THE ERROR:
+            try {
+                dataManager.saveGame(currentPlayer);
+                System.out.println("Game data auto-saved successfully on exit.");
+            } catch (Exception e) {
+                // Catching Exception covers the IOException thrown by the file operations
+                System.err.println("ERROR: Failed to auto-save game on exit!");
+                e.printStackTrace();
+            }
+        }
+    }
+
     public static void main(String[] args) {
         launch(args);
     }
