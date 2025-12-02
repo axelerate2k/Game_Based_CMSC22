@@ -43,12 +43,11 @@ public class Main extends Application {
         this.dataManager = new PlayerDataManager();
 
         Scene splash = makeSplashScene(primaryStage);
-        primaryStage.setTitle("Fishing Adventure");
+        primaryStage.setTitle("FISHDA");
         primaryStage.setScene(splash);
         primaryStage.setResizable(false);
         primaryStage.show();
     }
-
 
     private Scene makeWelcomeScene() {
 
@@ -72,15 +71,20 @@ public class Main extends Application {
         // Background GIF
         ImageView bgImageView = new ImageView();
         try {
-            Image bgImage = new Image(getClass().getResourceAsStream("/backgrounds/login/fishing_dock_login.gif"));
-            bgImageView.setImage(bgImage);
-            bgImageView.setFitWidth(1280);
-            bgImageView.setFitHeight(720);
-            bgImageView.setPreserveRatio(false);
+            // FIX: Use getResource() for image loading to simplify path handling
+            URL bgUrl = getClass().getResource("/backgrounds/login/fishing_dock_login.gif");
+            if (bgUrl != null) {
+                Image bgImage = new Image(bgUrl.toExternalForm());
+                bgImageView.setImage(bgImage);
+                bgImageView.setFitWidth(1280);
+                bgImageView.setFitHeight(720);
+                bgImageView.setPreserveRatio(false);
+            } else {
+                 System.err.println("Could not find login background image.");
+            }
         } catch (Exception e) {
-            System.err.println("Could not load background image: " + e.getMessage());
-            // Fallback to solid color background
-            root.getStyleClass().add("login-background");
+            System.err.println("Error loading background image: " + e.getMessage());
+            root.getStyleClass().add("login-background"); // Fallback CSS style
         }
 
         // Center panel with translucent background
@@ -94,7 +98,7 @@ public class Main extends Application {
         titleLabel = new Label("Fishing Adventure");
         titleLabel.getStyleClass().add("title-label");
         titleLabel.setText(titleLabel.getText().toUpperCase());
-        
+
         // Username Label
         usernameLabel = new Label("Username:");
         usernameLabel.getStyleClass().add("field-label");
@@ -128,16 +132,15 @@ public class Main extends Application {
         
         loginButton = new Button("Login");
         loginButton.getStyleClass().addAll("btn", "btn-login");
-        
+
         registerButton = new Button("Register");
         registerButton.getStyleClass().addAll("btn", "btn-register");
-        
+
         buttonBox.getChildren().addAll(loginButton, registerButton);
         
         // Add all elements to center panel
         centerPanel.getChildren().addAll(
             titleLabel,
-            // Removed Spacer
             usernameLabel,
             usernameField,
             passwordLabel,
@@ -165,11 +168,11 @@ public class Main extends Application {
         loginButton.setOnMouseClicked(e -> {
             handleLogin(usernameField, passwordField, errorLabel);
         });
-        
+
         registerButton.setOnMouseClicked(e -> {
            handleRegister(isRegistering, usernameField, passwordField, errorLabel);
         });
-        
+
         // Add background and panel to root
         root.getChildren().addAll(bgImageView, centerPanel);
 
@@ -307,7 +310,7 @@ public class Main extends Application {
         // Scene
         Scene splashScene = new Scene(splashLayout, 1280, 720);
 
-        // Load external CSS file
+        // Load External CSS
         try {
             URL cssUrl = getClass().getResource("/stylesheet/styles.css");
             if (cssUrl != null) {
@@ -318,6 +321,7 @@ public class Main extends Application {
         } catch (Exception e) {
             System.err.println("Could not load CSS file for splash scene: " + e.getMessage());
         }
+
 
         // Fade in effect
         FadeTransition fadeIn = new FadeTransition(Duration.seconds(1), splashLayout);
@@ -360,7 +364,7 @@ public class Main extends Application {
             if (data.containsKey("equippedRod"))
                 player.setEquippedRod(data.get("equippedRod"));
 
-      
+
         } catch (Exception e) {
             System.err.println("Error loading player data: " + e.getMessage());
         }

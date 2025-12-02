@@ -5,31 +5,31 @@ public class InventoryItem {
     private String name;
     private int quantity;
     private String rarity; // For fish: "Common", "Rare", "Legendary"
-
+    
     public InventoryItem(String type, String name, int quantity) {
         this.type = type;
         this.name = name;
         this.quantity = quantity;
         this.rarity = null;
     }
-
+    
     public InventoryItem(String type, String name, int quantity, String rarity) {
         this.type = type;
         this.name = name;
         this.quantity = quantity;
         this.rarity = rarity;
     }
-
+    
     public String getType() { return type; }
     public String getName() { return name; }
     public int getQuantity() { return quantity; }
     public void setQuantity(int quantity) { this.quantity = quantity; }
     public String getRarity() { return rarity; }
-
+    
     // Get sell value (coins and XP)
     public int getSellCoins() {
         if (!type.equals("Fish")) return 0;
-
+        
         // Fish sell values based on project spec
         switch (name) {
             case "Anglerfish":
@@ -60,10 +60,10 @@ public class InventoryItem {
         }
         return 0;
     }
-
+    
     public int getSellXP() {
         if (!type.equals("Fish")) return 0;
-
+        
         switch (name) {
             case "Anglerfish":
                 if (rarity.equals("Common")) return 5;
@@ -93,11 +93,11 @@ public class InventoryItem {
         }
         return 0;
     }
-
+    
     // Get rod sell value
     public int getRodSellValue() {
         if (!type.equals("Rod")) return 0;
-
+        
         switch (name) {
             case "Bamboo Rod": return 0; // Cannot sell
             case "Wooden Rod": return 100;
@@ -106,7 +106,7 @@ public class InventoryItem {
         }
         return 0;
     }
-
+    
     // Get description for item details modal
     public String getDescription() {
         if (type.equals("Bait")) {

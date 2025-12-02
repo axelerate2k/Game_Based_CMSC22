@@ -18,21 +18,22 @@ import javafx.util.Duration;
 import model.Player;
 import model.InventoryItem;
 import utils.SpriteLoader;
-
 import java.util.List;
+import javafx.scene.control.ProgressBar;
 
 public class DashboardScreen {
 
     private Stage stage;
     private Player player;
     private Scene scene;
-    private StackPane root;
+    private StackPane sceneRoot; // Changed to StackPane for modals
 
     // UI Components
     private Label coinsLabel, xpLabel, baitsLabel, warningLabel;
     private VBox sidePanel;
     private ImageView fishermanView;
-
+    private Label usernameLabel; // Move from local variable to class-level
+    private ProgressBar xpBar;
 
     // State
     private String activePanelType = null; // "inventory", "shop", "daily", "logbook"
@@ -44,10 +45,10 @@ public class DashboardScreen {
     }
 
     private void createDashboard() {
-        // --- Root layout ---
-        root = new StackPane();
+        // --- Root Layout --- //
+        sceneRoot = new StackPane();
 
-        // --- Main Game Layout --- //
+        // Main game layout
         AnchorPane gameLayer = new AnchorPane();
         gameLayer.getStyleClass().add("dashboard-root");
 
@@ -77,7 +78,7 @@ public class DashboardScreen {
         fishermanView.getStyleClass().add("fisherman-sprite");
         gameLayer.getChildren().add(fishermanView);
         AnchorPane.setTopAnchor(fishermanView, 407.0);
-        AnchorPane.setLeftAnchor(fishermanView, 950.0);
+        AnchorPane.setLeftAnchor(fishermanView, 920.0);
         startIdleAnimation();
 
         // --- Shop button --- //
@@ -106,7 +107,6 @@ public class DashboardScreen {
         gameLayer.getChildren().add(warningLabel);
         AnchorPane.setTopAnchor(warningLabel, 500.0);
         AnchorPane.setRightAnchor(warningLabel, 10.0);
-
         // --- Side panel ---
         sidePanel = new VBox(20);
         sidePanel.getStyleClass().add("side-panel");
@@ -126,7 +126,7 @@ public class DashboardScreen {
         AnchorPane.setRightAnchor(topBar, 0.0);
 
         // --- Add game layer to root --- //
-        root.getChildren().add(gameLayer);
+        sceneRoot.getChildren().add(gameLayer);
 
         // fisherman clickable
         fishermanView.setOnMouseEntered(event -> scene.setCursor(Cursor.HAND));
@@ -137,7 +137,7 @@ public class DashboardScreen {
 
 
         // --- Scene ---
-        scene = new Scene(root, 1280, 720);
+        scene = new Scene(sceneRoot, 1280, 720);
         try {
             scene.getStylesheets().add(getClass().getResource("/stylesheet/styles.css").toExternalForm());
         } catch (Exception e) {
@@ -151,21 +151,55 @@ public class DashboardScreen {
     // ---------------- Essential Methods ----------------
 
     private HBox createTopBar() {
-        HBox topBar = new HBox(20);
+        HBox topBar = new HBox(10);
         topBar.getStyleClass().add("dashboard-top-bar");
         topBar.setAlignment(Pos.CENTER_LEFT);
 
-        Label usernameLabel = new Label("👤 " + player.getUsername());
+        // Username
+        usernameLabel = new Label(player.getUsername());
         usernameLabel.getStyleClass().add("stat-label");
 
-        Label sep1 = new Label("|"); sep1.getStyleClass().add("stat-separator");
-        coinsLabel = new Label("💰 " + player.getCoins()); coinsLabel.getStyleClass().add("stat-label");
-        Label sep2 = new Label("|"); sep2.getStyleClass().add("stat-separator");
-        xpLabel = new Label("⭐ " + player.getXp()); xpLabel.getStyleClass().add("stat-label");
-        Label sep3 = new Label("|"); sep3.getStyleClass().add("stat-separator");
-        baitsLabel = new Label("🪱 " + player.getTotalBaits()); baitsLabel.getStyleClass().add("stat-label");
 
-        topBar.getChildren().addAll(usernameLabel, sep1, coinsLabel, sep2, xpLabel, sep3, baitsLabel);
+        Label sep1 = new Label("|");
+        sep1.getStyleClass().add("stat-separator");
+
+        // Level
+        xpLabel = new Label("Level " + player.getLevel());
+        xpLabel.getStyleClass().add("stat-label");
+
+        // XP Bar
+        xpBar = new ProgressBar();
+        xpBar.setPrefWidth(150);
+        xpBar.setPrefHeight(15);
+        xpBar.setStyle("-fx-accent: #FFD700;");
+        updateXpBar();
+
+        // HBox for level + XP bar horizontally
+        HBox levelBox = new HBox(5);
+        levelBox.setAlignment(Pos.CENTER_LEFT);
+        levelBox.getChildren().addAll(xpLabel, xpBar);
+
+        Label sep2 = new Label("|");
+        sep2.getStyleClass().add("stat-separator");
+
+        // Coins
+        coinsLabel = new Label("💰 " + player.getCoins());
+        coinsLabel.getStyleClass().add("stat-label");
+
+        Label sep3 = new Label("|");
+        sep3.getStyleClass().add("stat-separator");
+
+        // Baits
+        baitsLabel = new Label("🐛 " + player.getTotalBaits());
+        baitsLabel.getStyleClass().add("stat-label");
+
+        // Build top bar
+        topBar.getChildren().addAll(
+            usernameLabel, sep1,
+            levelBox, sep2,
+            coinsLabel, sep3,
+            baitsLabel
+        );
         return topBar;
     }
 
@@ -196,7 +230,6 @@ public class DashboardScreen {
             titleLabel.setText("📦 Inventory");
             sidePanel.getChildren().add(createInventoryGrid());
         }
-
         else if (panelType.equals("shop")) {
             titleLabel.setText("🛒 Shop");
             sidePanel.getChildren().add(createShopGrid());
@@ -204,7 +237,6 @@ public class DashboardScreen {
 
         sidePanel.setVisible(true);
         sidePanel.setManaged(true);
-        sidePanel.toFront(); // ensure panel is on top
     }
 
     private void closePanel() {
@@ -229,6 +261,7 @@ public class DashboardScreen {
     private void startIdleAnimation() {
         Image[] idleFrames = SpriteLoader.loadFishermanIdle();
         if (idleFrames == null || idleFrames.length == 0) {
+            System.err.println("Failed to load fisherman idle animation");
             return;
         }
         // Frame delay in nanoseconds (200 ms per frame)
@@ -291,8 +324,10 @@ public class DashboardScreen {
     public void updateStats() {
         coinsLabel.setText("💰 " + player.getCoins());
         xpLabel.setText("⭐ " + player.getXp());
-        baitsLabel.setText("🪱 " + player.getTotalBaits());
+        baitsLabel.setText("🐛 " + player.getTotalBaits());
+        updateXpBar();		// for xp bar
 
+        // Ensure the panel is refreshed after a stat change (like selling)
         refreshActivePanel();
     }
 
@@ -599,7 +634,7 @@ public class DashboardScreen {
             equipBtn.setOnAction(e -> {
                 player.setEquippedRod(item.getName());
                 System.out.println("Equipped: " + item.getName());
-                root.getChildren().remove(modalOverlay);
+                sceneRoot.getChildren().remove(modalOverlay);
                 // Refresh inventory to show equipped status
                 if (activePanelType != null && activePanelType.equals("inventory")) {
                     togglePanel("inventory");
@@ -616,25 +651,24 @@ public class DashboardScreen {
             sellBtn.getStyleClass().addAll("modal-btn", "modal-btn-danger");
             sellBtn.setOnAction(e -> {
                 handleSellItem(item, slotIndex);
-                root.getChildren().remove(modalOverlay);
+                sceneRoot.getChildren().remove(modalOverlay);
             });
             buttonBox.getChildren().add(sellBtn);
         }
 
         Button closeBtn = new Button("Close");
         closeBtn.getStyleClass().add("modal-btn");
-        closeBtn.setOnAction(e -> root.getChildren().remove(modalOverlay));
+        closeBtn.setOnAction(e -> sceneRoot.getChildren().remove(modalOverlay));
         buttonBox.getChildren().add(closeBtn);
 
         modalPanel.getChildren().add(buttonBox);
         modalOverlay.getChildren().add(modalPanel);
-
-        root.getChildren().add(modalOverlay);
+        sceneRoot.getChildren().add(modalOverlay);
         modalOverlay.toFront();
 
         modalOverlay.setOnMouseClicked(e -> {
             if (e.getTarget() == modalOverlay) {
-                root.getChildren().remove(modalOverlay);
+                sceneRoot.getChildren().remove(modalOverlay);
             }
         });
     }
@@ -665,6 +699,9 @@ public class DashboardScreen {
                 player.addXp(xp);
                 player.getStats().addMoneyEarned(coins);
                 player.getStats().addXpEarned(xp);
+
+                refreshUsernameLevel();             // <--- update level label
+                updateStats();                      // <--- update other labels (coins, XP, baits)
 
                 System.out.println("Sold 1x " + item.getName() + " for " + coins + " coins + " + xp + " XP");
             } else {
@@ -786,4 +823,29 @@ public class DashboardScreen {
     public Scene getScene() {
         return scene;
     }
+
+    public void refreshUsernameLevel() {
+        usernameLabel.setText("👤 " + player.getUsername() + "  |  Level " + player.getLevel());
+        xpLabel.setText("⭐ " + player.getXp());		//Update the xp label with the current xp value
+        xpBar.setProgress(getXpProgress());		// Update the xp progress bar to reflect the player's progress toward the next level
+    }
+
+    private double getXpProgress() {
+        int currentXp = player.getXp();
+        int xpForNextLevel = player.getXpForNextLevel();		// Get the total xp required to reach the next level
+        if (xpForNextLevel <= 0) return 1.0; // Max level reached
+        return (double) currentXp / xpForNextLevel;		// Otherwise, return progress as a fraction of xp toward next level
+    }
+
+    public void updateXpBar() {
+        int xp = player.getXp();
+        int nextLevelXp = player.getXpForNextLevel();
+        if (nextLevelXp <= 0) {		//   // If max level reached, fill the xp bar
+            xpBar.setProgress(1.0); // Max level
+        } else {
+            double progress = (double) xp / nextLevelXp;		// Otherwise, set progress as fraction of current xp / next level xp
+            xpBar.setProgress(progress);
+        }
+    }
 }
+
