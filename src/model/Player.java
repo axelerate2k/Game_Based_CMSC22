@@ -42,6 +42,23 @@ public class Player {
         return null;
     }
     
+    // Get item at specific inventory slot
+    public InventoryItem getItemAt(int index) {
+        if (index >= 0 && index < inventory.size()) {
+            return inventory.get(index);
+        }
+        return null;
+    }
+    
+ // Set item at specific slot
+    public void setItemAt(int index, InventoryItem item) {
+        if (index >= 0 && index < 15) {
+            while (inventory.size() <= index) {
+                inventory.add(null);
+            }
+            inventory.set(index, item);
+        }
+    }
     /**
      * Changes the quantity of an item. Used for selling/using stackable items (Fish/Bait).
      * @param itemName The name of the item (e.g., "Red Salmon").
