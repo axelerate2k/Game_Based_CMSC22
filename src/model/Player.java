@@ -9,10 +9,11 @@ public class Player {
     private int xp;
     private String equippedRod;
     private List<InventoryItem> inventory;
-    private PlayerStats stats; // Assumes model.PlayerStats is a separate file
+    private PlayerStats stats;
     private long lastRewardClaim;
     private InventoryItem selectedBait;
-    
+    private int selectedSlotIndex = -1; // Track selected bait slot for visual feedback
+
     public Player(String username) {
         this.username = username;
         this.coins = 50;
@@ -23,13 +24,21 @@ public class Player {
         this.lastRewardClaim = 0;
         this.selectedBait = null;
         
-        // Add starter items
+        // Add starter items - Fill exactly 15 slots for testing
         inventory.add(new InventoryItem("Rod", "Bamboo Rod", 1));
         inventory.add(new InventoryItem("Bait", "Basic Worm", 20));
+        inventory.add(new InventoryItem("Bait", "Enhanced Bait", 10));
+        inventory.add(new InventoryItem("Fish", "Anglerfish", 1, "Common"));
+        inventory.add(new InventoryItem("Fish", "Red Salmon", 1, "Rare"));
+        inventory.add(new InventoryItem("Fish", "Swordfish", 1, "Legendary"));
+        inventory.add(new InventoryItem("Bait", "Rare Lure", 5));
+        inventory.add(new InventoryItem("Rod", "Wooden Rod", 1));
+        inventory.add(new InventoryItem("Fish", "Oarfish", 1, "Common"));
+        // Leave some empty slots (inventory size = 15)
     }
     
     // --- ITEM MANAGEMENT LOGIC ---
-    
+
     /**
      * Helper method to find an InventoryItem object by its name.
      */
@@ -41,7 +50,7 @@ public class Player {
         }
         return null;
     }
-    
+
     /**
      * Changes the quantity of an item. Used for selling/using stackable items (Fish/Bait).
      * @param itemName The name of the item (e.g., "Red Salmon").
@@ -50,10 +59,10 @@ public class Player {
      */
     public boolean changeItemQuantity(String itemName, int quantityChange) {
         InventoryItem item = findItemByName(itemName);
-        
+
         if (item == null) {
             // Cannot reduce quantity of an item the player doesn't have
-            return quantityChange > 0; 
+            return quantityChange > 0;
         }
 
         int currentQty = item.getQuantity();
@@ -67,21 +76,21 @@ public class Player {
         if (newQty == 0) {
             // Remove the item entirely if the quantity hits zero
             inventory.remove(item);
-            
+
             // If the item removed was the selected bait, deselect it.
             if (item == this.selectedBait) {
                 this.selectedBait = null;
             }
             return true;
         }
-        
+
         // Otherwise, just update the quantity
         item.setQuantity(newQty);
         return true;
     }
-    
+
     // --- END ITEM MANAGEMENT LOGIC ---
-    
+
     // Getters and Setters
     public String getUsername() { return username; }
     public int getCoins() { return coins; }
@@ -98,28 +107,28 @@ public class Player {
     public void setEquippedRod(String rod) { this.equippedRod = rod; }
     
     public List<InventoryItem> getInventory() { return inventory; }
-    
+
     /**
-     * Adds an item to the inventory. If an existing stackable item is found, 
+     * Adds an item to the inventory. If an existing stackable item is found,
      * the quantity is added to the existing stack. Otherwise, the item is added.
      * Unique items (like Rods) will not be added if a matching item already exists.
      */
-    public void addToInventory(InventoryItem item) { 
+    public void addToInventory(InventoryItem item) {
         InventoryItem existingItem = findItemByName(item.getName());
-        
+
         if (existingItem != null) {
             // Case 1: Item already exists. Only stack Bait and Fish.
             if (item.getType().equals("Bait") || item.getType().equals("Fish")) {
                 existingItem.setQuantity(existingItem.getQuantity() + item.getQuantity());
-            } 
-            // If the item is a unique equipment (like a Rod) and already exists, 
+            }
+            // If the item is a unique equipment (like a Rod) and already exists,
             // we do nothing to prevent duplicates.
         } else {
             // Case 2: Item does not exist. Add it regardless of type.
-             inventory.add(item); 
+             inventory.add(item);
         }
     }
-    
+
     public void removeFromInventory(InventoryItem item) { inventory.remove(item); }
     
     public PlayerStats getStats() { return stats; }
@@ -130,6 +139,41 @@ public class Player {
     public InventoryItem getSelectedBait() { return selectedBait; }
     public void setSelectedBait(InventoryItem bait) { this.selectedBait = bait; }
     
+    public int getSelectedSlotIndex() { return selectedSlotIndex; }
+    public void setSelectedSlotIndex(int index) { this.selectedSlotIndex = index; }
+
+    // Get item at specific inventory slot
+    public InventoryItem getItemAt(int index) {
+        if (index >= 0 && index < inventory.size()) {
+            return inventory.get(index);
+        }
+        return null;
+    }
+
+    // Swap two items in inventory
+    public void swapItems(int index1, int index2) {
+        if (index1 >= 0 && index1 < 15 && index2 >= 0 && index2 < 15) {
+            // Ensure inventory list is large enough
+            while (inventory.size() < 15) {
+                inventory.add(null);
+            }
+
+            InventoryItem temp = inventory.get(index1);
+            inventory.set(index1, inventory.get(index2));
+            inventory.set(index2, temp);
+        }
+    }
+
+    // Set item at specific slot
+    public void setItemAt(int index, InventoryItem item) {
+        if (index >= 0 && index < 15) {
+            while (inventory.size() <= index) {
+                inventory.add(null);
+            }
+            inventory.set(index, item);
+        }
+    }
+
     // Get total bait count
     public int getTotalBaits() {
         int total = 0;
@@ -155,7 +199,6 @@ public class Player {
         return false;
     }
    
-    // (szhan) na add ko na methods
     
     public int getLevel() {
     	// Calculate level: integer division of XP by 50, plus 1 for starting at level 1

@@ -33,8 +33,7 @@ public class Main extends Application {
     public void start(Stage stage) {
 
         // Load fonts
-        Font.loadFont(getClass().getResourceAsStream("/fonts/BoldPixelsFont.ttf"), 20);
-        Font.loadFont(getClass().getResourceAsStream("/fonts/PixelOperator.ttf"), 12);       // dialogue / inventory / body text
+        Font.loadFont(getClass().getResourceAsStream("/fonts/BoldPixelsFont.ttf"), 20); // text
         Font.loadFont(getClass().getResourceAsStream("/fonts/dogicapixelbold.ttf"), 20);  // UI / labels
         Font.loadFont(getClass().getResourceAsStream("/fonts/BitPotion.ttf"), 28); // titles / splash
 
@@ -71,7 +70,6 @@ public class Main extends Application {
         // Background GIF
         ImageView bgImageView = new ImageView();
         try {
-            // FIX: Use getResource() for image loading to simplify path handling
             URL bgUrl = getClass().getResource("/backgrounds/login/fishing_dock_login.gif");
             if (bgUrl != null) {
                 Image bgImage = new Image(bgUrl.toExternalForm());
@@ -347,31 +345,6 @@ public class Main extends Application {
         DashboardScreen dashboard = new DashboardScreen(primaryStage, player);
         primaryStage.setScene(dashboard.getScene());
     }
-
-
-    private Player loadPlayerFromData(String username, Map<String, String> data) {
-        Player player = new Player(username);
-
-        if (data == null) return player;
-
-        try {
-            if (data.containsKey("coins"))
-                player.setCoins(Integer.parseInt(data.get("coins")));
-
-            if (data.containsKey("xp"))
-                player.setXp(Integer.parseInt(data.get("xp")));
-
-            if (data.containsKey("equippedRod"))
-                player.setEquippedRod(data.get("equippedRod"));
-
-
-        } catch (Exception e) {
-            System.err.println("Error loading player data: " + e.getMessage());
-        }
-
-        return player;
-    }
-
 
     @Override
     public void stop() {
