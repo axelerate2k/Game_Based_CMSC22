@@ -3,11 +3,14 @@ package main;
 import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -47,6 +50,21 @@ public class Main extends Application {
 
 
     private Scene makeWelcomeScene() {
+
+        // Layout
+        VBox centerPanel;
+        Label titleLabel;
+        Label usernameLabel;
+        TextField usernameField;
+        Label passwordLabel;
+        PasswordField passwordField;
+        Label errorLabel;
+        HBox buttonBox;
+        Button loginButton;
+        Button registerButton;
+
+        final boolean[] isRegistering = {false}; // start in login mode
+
         // Create root StackPane for layering
         StackPane root = new StackPane();
         
@@ -63,54 +81,54 @@ public class Main extends Application {
             // Fallback to solid color background
             root.getStyleClass().add("login-background");
         }
-        
+
         // Center panel with translucent background
-        VBox centerPanel = new VBox(14);
+        centerPanel = new VBox(14);
         centerPanel.setAlignment(Pos.CENTER);
         centerPanel.setMaxWidth(700);
         centerPanel.setMaxHeight(380);
         centerPanel.getStyleClass().add("login-panel");
         
         // Title
-        Label titleLabel = new Label("Fishing Adventure");
+        titleLabel = new Label("Fishing Adventure");
         titleLabel.getStyleClass().add("title-label");
         titleLabel.setText(titleLabel.getText().toUpperCase());
         
         // Username Label
-        Label usernameLabel = new Label("Username:");
+        usernameLabel = new Label("Username:");
         usernameLabel.getStyleClass().add("field-label");
 
         // text field
-        TextField usernameField = new TextField();
+        usernameField = new TextField();
         usernameField.setPromptText("Enter username");
         usernameField.setMaxWidth(300);
         usernameField.getStyleClass().add("input-field");
         
         // Password Label
-        Label passwordLabel = new Label("Password:");
+        passwordLabel = new Label("Password:");
         passwordLabel.getStyleClass().add("field-label");
 
         // text field
-        PasswordField passwordField = new PasswordField();
+        passwordField = new PasswordField();
         passwordField.setPromptText("Enter password");
         passwordField.setMaxWidth(300);
         passwordField.getStyleClass().add("input-field");
         
         // Error label
-        Label errorLabel = new Label();
+        errorLabel = new Label();
         errorLabel.getStyleClass().add("error-label");
         errorLabel.setWrapText(true);
         errorLabel.setMaxWidth(300);
         errorLabel.setAlignment(Pos.CENTER);
         
         // Buttons
-        HBox buttonBox = new HBox(10);
+        buttonBox = new HBox(10);
         buttonBox.setAlignment(Pos.CENTER);
         
-        Button loginButton = new Button("Login");
+        loginButton = new Button("Login");
         loginButton.getStyleClass().addAll("btn", "btn-login");
         
-        Button registerButton = new Button("Register");
+        registerButton = new Button("Register");
         registerButton.getStyleClass().addAll("btn", "btn-register");
         
         buttonBox.getChildren().addAll(loginButton, registerButton);
@@ -128,80 +146,27 @@ public class Main extends Application {
         );
 
 
-        // mouse click
-        // enter key
-
-
-
-        // Event handlers
-        loginButton.setOnAction(e -> {
-
-            String username = usernameField.getText().trim();
-            String password = passwordField.getText();
-            
-            if (username.isEmpty() || password.isEmpty()) {
-                errorLabel.getStyleClass().remove("success-label");
-                errorLabel.getStyleClass().add("error-label");
-                errorLabel.setText("Please fill in all fields!");
-                return;
+        EventHandler<KeyEvent> enterHandler = event -> {
+            if(event.getCode() == KeyCode.ENTER){
+                if(isRegistering[0]){
+                    handleRegister(isRegistering, usernameField, passwordField, errorLabel);
+                } else {
+                    handleLogin(usernameField, passwordField, errorLabel);
+                }
             }
-            
-            if (dataManager.validateLogin(username, password)) {
-                errorLabel.getStyleClass().remove("error-label");
-                errorLabel.getStyleClass().add("success-label");
-                errorLabel.setText("Login successful!");
-                
-                // Load player data and transition to dashboard
-                Map<String, String> playerData = dataManager.loadPlayerData(username);
-                Player player = loadPlayerFromData(username, playerData);
-                
-                // Show dashboard after short delay
-                javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.seconds(0.5));
-                pause.setOnFinished(evt -> showDashboard(player));
-                pause.play();
-            } else {
-                errorLabel.getStyleClass().remove("success-label");
-                errorLabel.getStyleClass().add("error-label");
-                errorLabel.setText("Invalid credentials!");
-            }
+        };
+
+        // Event handlers for enter key
+        usernameField.setOnKeyPressed(enterHandler);
+        passwordField.setOnKeyPressed(enterHandler);
+
+        // Event handlers for mouse clicks
+        loginButton.setOnMouseClicked(e -> {
+            handleLogin(usernameField, passwordField, errorLabel);
         });
         
-        registerButton.setOnAction(e -> {
-            String username = usernameField.getText().trim();
-            String password = passwordField.getText();
-            
-            if (username.isEmpty() || password.isEmpty()) {
-                errorLabel.getStyleClass().remove("success-label");
-                errorLabel.getStyleClass().add("error-label");
-                errorLabel.setText("Please fill in all fields!");
-                return;
-            }
-            
-            if (username.length() < 3) {
-                errorLabel.getStyleClass().remove("success-label");
-                errorLabel.getStyleClass().add("error-label");
-                errorLabel.setText("Username must be at least 3 characters!");
-                return;
-            }
-            
-            if (password.length() < 4) {
-                errorLabel.getStyleClass().remove("success-label");
-                errorLabel.getStyleClass().add("error-label");
-                errorLabel.setText("Password must be at least 4 characters!");
-                return;
-            }
-            
-            if (dataManager.registerUser(username, password)) {
-                errorLabel.getStyleClass().remove("error-label");
-                errorLabel.getStyleClass().add("success-label");
-                errorLabel.setText("Registration successful! You can now login.");
-                usernameField.clear();
-                passwordField.clear();
-            } else {
-                errorLabel.getStyleClass().remove("success-label");
-                errorLabel.getStyleClass().add("error-label");
-                errorLabel.setText("Username already taken!");
-            }
+        registerButton.setOnMouseClicked(e -> {
+           handleRegister(isRegistering, usernameField, passwordField, errorLabel);
         });
         
         // Add background and panel to root
@@ -218,6 +183,72 @@ public class Main extends Application {
 
         return scene;
     }
+
+    private void handleRegister(boolean[] isRegistering, TextField usernameField, PasswordField passwordField, Label errorLabel) {
+        String username = usernameField.getText().trim();
+        String password = passwordField.getText();
+
+        if (username.isEmpty() || password.isEmpty()) {
+            showError(errorLabel,"Please fill in all fields!");
+            return;
+        }
+
+        if (username.length() < 3) {
+            showError(errorLabel,"Username must be at least 3 characters!");
+            return;
+        }
+
+        if (password.length() < 4) {
+            showError(errorLabel,"Password must be at least 4 characters!");
+            return;
+        }
+
+        if (dataManager.registerUser(username, password)) {
+            showSuccess(errorLabel,"Registration successful!");
+            usernameField.clear();
+            passwordField.clear();
+
+            // switch back to login mode
+            isRegistering[0] = false;
+
+        } else {
+            showError(errorLabel,"Username already taken!");
+        }
+    }
+
+    private void showError(Label errorLabel, String message) {
+        errorLabel.getStyleClass().remove("success-label");
+        errorLabel.getStyleClass().add("error-label");
+        errorLabel.setText(message);
+    }
+
+    private void showSuccess(Label errorLabel, String message) {
+        errorLabel.getStyleClass().remove("error-label");
+        errorLabel.getStyleClass().add("success-label");
+        errorLabel.setText(message);
+    }
+
+    private void handleLogin(TextField usernameField, PasswordField passwordField, Label errorLabel) {
+        String username = usernameField.getText().trim();
+        String password = passwordField.getText();
+
+        if (username.isEmpty() || password.isEmpty()) {
+            showError(errorLabel,"Please fill in all fields!");
+            return;
+        }
+
+        if (dataManager.validateLogin(username, password)) {
+            showSuccess(errorLabel,"Login successful!");
+            Player player = loadPlayerFromData(username, dataManager.loadPlayerData(username));
+
+            PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
+            pause.setOnFinished(e -> showDashboard(player));
+            pause.play();
+        } else {
+            showError(errorLabel,"Invalid credentials!");
+        }
+    }
+
 
     private Scene makeSplashScene(Stage stage) {
 

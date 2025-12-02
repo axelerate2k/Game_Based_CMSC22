@@ -111,7 +111,6 @@ public class DashboardScreen {
         fishermanView.setOnMouseEntered(event -> scene.setCursor(Cursor.HAND));
         fishermanView.setOnMouseExited(event -> scene.setCursor(Cursor.DEFAULT));
         fishermanView.setOnMouseClicked(event -> {
-            startFishingAnimation();
             handleGoFishing();
         });
 
@@ -196,6 +195,7 @@ public class DashboardScreen {
             hideWarning.play();
         } else {
             warningLabel.setVisible(false);
+            startFishingAnimation();
             System.out.println("Starting fishing with: " + player.getSelectedBait().getName());
         }
     }
