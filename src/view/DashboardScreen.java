@@ -224,6 +224,8 @@ public class DashboardScreen {
                 coinsLabel, sep3,
                 baitsLabel
         );
+
+        refreshUsernameLevel();
         return topBar;
     }
 
@@ -281,8 +283,10 @@ public class DashboardScreen {
         } else {
             fishingLabel.setText("You Fished!");
             fishingLabel.setVisible(true);
-            Timeline hideSuccess = new Timeline(new KeyFrame(Duration.seconds(3), e -> fishingLabel.setVisible(false)));
+            Timeline hideSuccess = new Timeline(new KeyFrame(Duration.seconds(2), e -> fishingLabel.setVisible(false)));
             startFishingAnimation();
+            System.out.println("Starting fishing with: " + player.getSelectedBait().getName());
+            player.useBait();
             hideSuccess.play();
         }
     }
@@ -1335,25 +1339,60 @@ public class DashboardScreen {
         });
     }
 
+    public void refreshUsernameLevel() {
+        usernameLabel.setText("👤 " + player.getUsername() + "  |  Level " + player.getLevel());
+        xpLabel.setText("⭐ " + player.getXp());		//Update the xp label with the current xp value
+        xpBar.setProgress(getXpProgress());		// Update the xp progress bar to reflect the player's progress toward the next level
+    }
+
+    private double getXpProgress() {
+        int currentXp = player.getXp();
+        int xpForNextLevel = player.getXpForNextLevel();		// Get the total xp required to reach the next level
+        if (xpForNextLevel <= 0) return 1.0; // Max level reached
+        return (double) currentXp / xpForNextLevel;		// Otherwise, return progress as a fraction of xp toward next level
+    }
+
+
     private void handleSellItem(InventoryItem item, int slotIndex) {
         if (item.getType().equals("Fish")) {
-            int coins = item.getSellCoins();
-            int xp = item.getSellXP();
-            player.addCoins(coins);
-            player.addXp(xp);
-            player.getStats().addMoneyEarned(coins);
-            player.getStats().addXpEarned(xp);
+            // Fish are stackable. The Model's changeItemQuantity handles reducing the count
+            // and removing the item completely if the quantity reaches zero.
+            if (player.changeItemQuantity(item.getName(), -1)) {
+                int coins = item.getSellCoins();
+                int xp = item.getSellXP();
 
-            System.out.println("Sold " + item.getName() + " for " + coins + " coins + " + xp + " XP");
+                player.addCoins(coins);
+                player.addXp(xp);
+                player.getStats().addMoneyEarned(coins);
+                player.getStats().addXpEarned(xp);
+
+                refreshUsernameLevel();             // <--- update level label
+                updateStats();                      // <--- update other labels (coins, XP, baits)
+
+                System.out.println("Sold 1x " + item.getName() + " for " + coins + " coins + " + xp + " XP");
+            } else {
+                System.err.println("Sell failed: Could not reduce fish quantity.");
+                return;
+            }
         } else if (item.getType().equals("Rod")) {
+            // Rods are non-stackable, remove the entire object
+
+            // Safety check: Cannot sell equipped rod (UI button should prevent this, but check here too)
+            if (item.getName().equals(player.getEquippedRod())) {
+                System.err.println("Sell failed: Cannot sell equipped rod.");
+                return;
+            }
+
             int coins = item.getRodSellValue();
+            player.removeFromInventory(item);
             player.addCoins(coins);
+
             System.out.println("Sold " + item.getName() + " for " + coins + " coins");
         }
 
-        player.setItemAt(slotIndex, null);
-        updateStats();
+        updateStats(); // Recalculates stats and refreshes panel
 
+        // This is now redundant since updateStats calls refreshActivePanel, but keeping for safety
         if (activePanelType != null && activePanelType.equals("inventory")) {
             togglePanel("inventory");
             togglePanel("inventory");
