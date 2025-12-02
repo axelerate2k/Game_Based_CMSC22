@@ -1,10 +1,9 @@
 package view;
 
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -27,7 +26,7 @@ public class DashboardScreen {
     private Label coinsLabel, xpLabel, baitsLabel, warningLabel;
     private VBox sidePanel;
     private ImageView fishermanView;
-    private Timeline idleAnimation;
+
 
     // State
     private String activePanelType = null; // "inventory", "shop", "daily", "logbook"
@@ -66,26 +65,19 @@ public class DashboardScreen {
         fishermanView.setFitHeight(140);
         fishermanView.setPreserveRatio(true);
         fishermanView.setSmooth(false);
+        fishermanView.getStyleClass().add("fisherman-sprite");
         root.getChildren().add(fishermanView);
         AnchorPane.setTopAnchor(fishermanView, 407.0);
-        AnchorPane.setLeftAnchor(fishermanView, 990.0);
+        AnchorPane.setLeftAnchor(fishermanView, 950.0);
         startIdleAnimation();
 
         // --- Bag button (Inventory) ---
         Button bagBtn = new Button("👜 Bag");
-        bagBtn.getStyleClass().add("nav-btn");
+        bagBtn.getStyleClass().add("bag-btn");
         bagBtn.setOnAction(e -> togglePanel("inventory"));
         root.getChildren().add(bagBtn);
         AnchorPane.setTopAnchor(bagBtn, 80.0);
         AnchorPane.setLeftAnchor(bagBtn, 0.0);
-
-        // --- Go Fishing button ---
-        Button fishingBtn = new Button("🎣 GO FISHING");
-        fishingBtn.getStyleClass().add("fishing-btn");
-        fishingBtn.setOnAction(e -> handleGoFishing());
-        root.getChildren().add(fishingBtn);
-        AnchorPane.setTopAnchor(fishingBtn, 300.0); // middle vertically
-        AnchorPane.setRightAnchor(fishingBtn, 10.0);
 
         // --- Warning label below Go Fishing ---
         warningLabel = new Label();
@@ -94,7 +86,7 @@ public class DashboardScreen {
         warningLabel.setMaxWidth(300);
         warningLabel.setWrapText(true);
         root.getChildren().add(warningLabel);
-        AnchorPane.setTopAnchor(warningLabel, 380.0);
+        AnchorPane.setTopAnchor(warningLabel, 500.0);
         AnchorPane.setRightAnchor(warningLabel, 10.0);
 
         // --- Side panel ---
@@ -115,6 +107,15 @@ public class DashboardScreen {
         AnchorPane.setLeftAnchor(topBar, 0.0);
         AnchorPane.setRightAnchor(topBar, 0.0);
 
+        // fisherman clickable
+        fishermanView.setOnMouseEntered(event -> scene.setCursor(Cursor.HAND));
+        fishermanView.setOnMouseExited(event -> scene.setCursor(Cursor.DEFAULT));
+        fishermanView.setOnMouseClicked(event -> {
+            startFishingAnimation();
+            handleGoFishing();
+        });
+
+
         // --- Scene ---
         scene = new Scene(root, 1280, 720);
         try {
@@ -125,6 +126,7 @@ public class DashboardScreen {
 
         stage.setScene(scene);
     }
+
 
     // ---------------- Essential Methods ----------------
 
@@ -201,17 +203,63 @@ public class DashboardScreen {
     private void startIdleAnimation() {
         Image[] idleFrames = SpriteLoader.loadFishermanIdle();
         if (idleFrames == null || idleFrames.length == 0) {
-            System.err.println("Failed to load fisherman idle animation");
             return;
         }
-        idleAnimation = new Timeline();
-        idleAnimation.setCycleCount(Animation.INDEFINITE);
-        for (int i = 0; i < idleFrames.length; i++) {
-            final int frameIndex = i;
-            KeyFrame frame = new KeyFrame(Duration.millis(i * 200), e -> fishermanView.setImage(idleFrames[frameIndex]));
-            idleAnimation.getKeyFrames().add(frame);
+        // Frame delay in nanoseconds (200 ms per frame)
+        long frameDelayNs = 200_000_000;
+
+        // Track the current frame and last update time
+
+        AnimationTimer idleAnimationTimer = new AnimationTimer() {
+            long lastUpdate = 0;
+            int currentFrame = 0;
+            @Override
+            public void handle(long now) {
+                if (now - lastUpdate >= frameDelayNs) {
+                    fishermanView.setImage(idleFrames[currentFrame++]);
+
+                    // Loop animation indefinitely
+                    if (currentFrame >= idleFrames.length) {
+                        currentFrame = 0;
+                    }
+
+                    lastUpdate = now;
+                }
+            }
+        };
+
+        idleAnimationTimer.start();
+    }
+
+    private void startFishingAnimation(){
+        Image[] fishingFrames = SpriteLoader.loadFishermanFishing();
+        if (fishingFrames == null || fishingFrames.length == 0) {
+            return;
         }
-        idleAnimation.play();
+
+        // Frame delay in milliseconds
+        long frameDelayNs = 120_000_000; // 120 ms in nanoseconds
+
+        AnimationTimer timer = new AnimationTimer() {
+            long lastUpdate = 0;
+            int currentFrame = 0;
+
+            @Override
+            public void handle(long now) {
+                if (now - lastUpdate >= frameDelayNs) {
+                    fishermanView.setImage(fishingFrames[currentFrame++]);
+
+                    // Stop when we reach the last frame
+                    if (currentFrame >= fishingFrames.length) {
+                        stop();
+                    }
+
+                    lastUpdate = now;
+                }
+            }
+        };
+
+        timer.start();
     }
 
     public void updateStats() {

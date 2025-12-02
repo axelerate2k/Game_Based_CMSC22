@@ -28,7 +28,9 @@ public class Main extends Application {
     public void start(Stage stage) {
 
         // Load fonts
-        Font.loadFont(getClass().getResourceAsStream("/fonts/VT323-Regular.ttf"), 16);       // dialogue / body text
+        Font.loadFont(getClass().getResourceAsStream("/fonts/PixelOperator-Bold.ttf"), 20);
+        Font.loadFont(getClass().getResourceAsStream("/fonts/PressStart2P.ttf"), 18);
+        Font.loadFont(getClass().getResourceAsStream("/fonts/PixelOperator.ttf"), 12);       // dialogue / inventory / body text
         Font.loadFont(getClass().getResourceAsStream("/fonts/dogicapixelbold.ttf"), 20);  // UI / labels
         Font.loadFont(getClass().getResourceAsStream("/fonts/BitPotion.ttf"), 28); // titles / splash
 
@@ -106,10 +108,10 @@ public class Main extends Application {
         buttonBox.setAlignment(Pos.CENTER);
         
         Button loginButton = new Button("Login");
-        loginButton.getStyleClass().addAll("btn", "btn-success");
+        loginButton.getStyleClass().addAll("btn", "btn-login");
         
         Button registerButton = new Button("Register");
-        registerButton.getStyleClass().addAll("btn", "btn-info");
+        registerButton.getStyleClass().addAll("btn", "btn-register");
         
         buttonBox.getChildren().addAll(loginButton, registerButton);
         
@@ -124,9 +126,16 @@ public class Main extends Application {
             errorLabel,
             buttonBox
         );
-        
+
+
+        // mouse click
+        // enter key
+
+
+
         // Event handlers
         loginButton.setOnAction(e -> {
+
             String username = usernameField.getText().trim();
             String password = passwordField.getText();
             
