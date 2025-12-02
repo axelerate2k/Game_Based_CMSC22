@@ -63,10 +63,10 @@ public class PlayerDataManager {
                 }
             }
             
-            System.out.println("✅ Game saved for: " + player.getUsername());
+            System.out.println("Game saved for: " + player.getUsername());
 
         } catch (IOException e) {
-            System.err.println("❌ Error saving game: " + e.getMessage());
+            System.err.println("Error saving game: " + e.getMessage());
         }
     }
 
@@ -168,7 +168,7 @@ public class PlayerDataManager {
                 }
             }
         } catch (IOException | NumberFormatException e) {
-            System.err.println("❌ Error loading save file: " + e.getMessage());
+            System.err.println("Error loading save file: " + e.getMessage());
             // If loading fails, re-initialize the player's inventory to defaults
             // This prevents a crash, but the user loses saved inventory data if it was corrupted.
             player = new Player(username); 
