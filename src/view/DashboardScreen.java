@@ -288,6 +288,7 @@ public class DashboardScreen {
             System.out.println("Starting fishing with: " + player.getSelectedBait().getName());
             player.useBait();
             hideSuccess.play();
+            refreshActivePanel();
         }
     }
 
