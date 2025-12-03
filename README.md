@@ -3,7 +3,8 @@
 A relaxing pixel art fishing game built with JavaFX where you catch various fish, upgrade your fishing equipment, and build your collection. Experience the joy of fishing in a charming retro-style world with simple mechanics and rewarding gameplay.
 <img width="1909" height="1116" alt="image" src="https://github.com/user-attachments/assets/26ae576d-151c-4985-938a-2290b78b727b" />
 <img width="1913" height="1115" alt="image" src="https://github.com/user-attachments/assets/d5e42d36-78d9-40b5-aa2d-7b2f9aad8fa8" />
-<img width="1594" height="928" alt="image" src="https://github.com/user-attachments/assets/0e7e5a11-d928-43ee-a2b9-5eabdb097621" />
+<img width="2048" height="1146" alt="image" src="https://github.com/user-attachments/assets/c3240263-842b-452a-ac9b-a958fa7e9fef" />
+
 
 
 
