@@ -23,6 +23,7 @@ import utils.SpriteLoader;
 import java.util.List;
 import java.util.Random;
 
+
 public class DashboardScreen {
 
     private Stage stage;
@@ -36,6 +37,7 @@ public class DashboardScreen {
     private ImageView fishermanView;
     private Label usernameLabel; // Move from local variable to class-level
     private ProgressBar xpBar;
+
 
     // State
     private String activePanelType = null; // "inventory", "shop", "daily", "logbook"
@@ -107,6 +109,13 @@ public class DashboardScreen {
         AnchorPane.setTopAnchor(dailyBtn, 180.0); // under Shop button
         AnchorPane.setLeftAnchor(dailyBtn, 0.0);
 
+        //about button
+        Button aboutBtn = new Button("ℹ️ About");
+        aboutBtn.getStyleClass().add("nav-btn");
+        aboutBtn.setOnAction(e -> showAboutScreen());
+        gameLayer.getChildren().add(aboutBtn);
+        AnchorPane.setTopAnchor(aboutBtn, 230.0); // under Daily button
+        AnchorPane.setLeftAnchor(aboutBtn, 0.0);
 
         // --- Warning label --- //
         warningLabel = new Label();
@@ -158,6 +167,8 @@ public class DashboardScreen {
         fishermanView.setOnMouseClicked(event -> {
             handleGoFishing();
         });
+        
+
 
 
         // --- Scene ---
@@ -171,7 +182,11 @@ public class DashboardScreen {
         stage.setScene(scene);
     }
 
-
+    //show about screen
+    private void showAboutScreen() {
+        AboutScreen aboutScreen = new AboutScreen(stage, scene);
+        stage.setScene(aboutScreen.getScene());
+    }
     // ---------------- Essential Methods ----------------
 
     private HBox createTopBar() {
@@ -275,22 +290,70 @@ public class DashboardScreen {
     }
 
     private void handleGoFishing() {
-        if (player.getSelectedBait() == null) {
-            warningLabel.setText("⚠️ Please select a bait from inventory!");
+        InventoryItem selectedBait = player.getSelectedBait();
+        if (selectedBait == null) {
+            warningLabel.setText("⚠️ Please select a bait!");
             warningLabel.setVisible(true);
-            Timeline hideWarning = new Timeline(new KeyFrame(Duration.seconds(3), e -> warningLabel.setVisible(false)));
-            hideWarning.play();
-        } else {
-            fishingLabel.setText("You Fished!");
-            fishingLabel.setVisible(true);
-            Timeline hideSuccess = new Timeline(new KeyFrame(Duration.seconds(3), e -> fishingLabel.setVisible(false)));
-            startFishingAnimation();
-            System.out.println("Starting fishing with: " + player.getSelectedBait().getName());
-            player.useBait();
-            hideSuccess.play();
-            refreshActivePanel();
+            new Timeline(new KeyFrame(Duration.seconds(3), e -> warningLabel.setVisible(false))).play();
+            return;
         }
+
+        fishingLabel.setText("You Fished!");
+        fishingLabel.setVisible(true);
+
+        // Play fishing animation
+        startFishingAnimation();
+
+        // Consume 1 bait
+        boolean baitUsed = player.useBait();
+        if (!baitUsed) {
+            fishingLabel.setText("No bait left!");
+            return;
+        }
+
+        // Roll fish
+        InventoryItem caught = rollCaughtFish(selectedBait);
+
+        // Add to inventory: Each rarity is separate
+        if (caught != null) {
+            boolean added = false;
+            for (int i = 0; i < 15; i++) {
+                InventoryItem slot = player.getItemAt(i);
+                if (slot == null) {
+                    // Empty slot: put fish here
+                    player.setItemAt(i, caught);
+                    added = true;
+                    break;
+                } else if (slot.getName().equals(caught.getName()) &&
+                           slot.getRarity() != null &&
+                           slot.getRarity().equals(caught.getRarity())) {
+                    // Same fish and same rarity: stack quantity
+                    slot.setQuantity(slot.getQuantity() + caught.getQuantity());
+                    added = true;
+                    break;
+                }
+            }
+
+            player.getStats().incrementFishCaught();
+            player.getStats().addXpEarned(caught.getSellXP());
+            player.addXp(caught.getSellXP());
+
+            fishingLabel.setText(added
+                    ? "🎣 You caught a " + caught.getRarity() + " " + caught.getName() + "!"
+                    : "🎣 You caught a " + caught.getRarity() + " " + caught.getName() + ", but inventory is full!");
+        } else {
+            fishingLabel.setText("No fish this time...");
+            
+        }
+
+        // Hide fishing label after 3 seconds
+        new Timeline(new KeyFrame(Duration.seconds(3), e -> fishingLabel.setVisible(false))).play();
+
+        // Refresh UI
+        refreshActivePanel();
     }
+
+
 
     private void startIdleAnimation() {
         Image[] idleFrames = SpriteLoader.loadFishermanIdle();
@@ -355,6 +418,52 @@ public class DashboardScreen {
 
         timer.start();
     }
+    
+    private InventoryItem rollCaughtFish(InventoryItem bait) {
+        if (bait == null) return null;
+
+        // Base probabilities (percentages)
+        double rareChance = 0;
+        double legendaryChance = 0;
+
+        switch (bait.getName()) {
+            case "Basic Worm": rareChance = 30; legendaryChance = 10; break;
+            case "Enhanced Bait": rareChance = 40; legendaryChance = 20; break;
+            case "Rare Lure": rareChance = 50; legendaryChance = 30; break;
+            case "Master Bait": rareChance = 45; legendaryChance = 50; break;
+        }
+
+        // Rod bonuses
+        switch (player.getEquippedRod()) {
+            case "Wooden Rod": rareChance += 10; legendaryChance += 10; break;
+            case "Steel Rod": rareChance += 15; legendaryChance += 15; break;
+            case "Master Rod": rareChance += 20; legendaryChance += 20; break;
+        }
+
+        // Clamp total probability to 100
+        if (rareChance + legendaryChance > 100) {
+            double total = rareChance + legendaryChance;
+            rareChance = rareChance / total * 100;
+            legendaryChance = legendaryChance / total * 100;
+        }
+
+        // Roll rarity first
+        double roll = Math.random() * 100;
+        String rarity;
+        if (roll < legendaryChance) rarity = "Legendary";
+        else if (roll < legendaryChance + rareChance) rarity = "Rare";
+        else rarity = "Common";
+
+        // Roll fish species
+        String[] fishList = { "Anglerfish", "Red Salmon", "Swordfish", "Oarfish", "Great White Shark" };
+        String species = fishList[(int)(Math.random() * fishList.length)];
+
+        System.out.println("[DEBUG] Rolled fish: " + species + " (" + rarity + ")");
+
+        // Create new InventoryItem with the correct rarity
+        return new InventoryItem("Fish", species, 1, rarity);
+    }
+
 
     public void updateStats() {
         coinsLabel.setText("💰 " + player.getCoins());
@@ -450,10 +559,11 @@ public class DashboardScreen {
     }
 
     private void setupDragAndDrop(Button slotBtn, int slotIndex, InventoryItem item) {
-        if (item == null) return; // Prevent drag/drop setup on empty slots
-
+        // Set up drag detection (only if slot has an item)
         slotBtn.setOnDragDetected(e -> {
-
+            InventoryItem currentItem = player.getInventory().get(slotIndex);
+            if (currentItem == null) return; // Can't drag empty slot
+            
             Dragboard db = slotBtn.startDragAndDrop(TransferMode.MOVE);
             ClipboardContent content = new ClipboardContent();
             content.putString(String.valueOf(slotIndex));
@@ -463,6 +573,7 @@ public class DashboardScreen {
             e.consume();
         });
 
+        // Allow dragging over ANY slot (empty or not)
         slotBtn.setOnDragOver(e -> {
             if (e.getGestureSource() != slotBtn && e.getDragboard().hasString()) {
                 e.acceptTransferModes(TransferMode.MOVE);
@@ -490,16 +601,20 @@ public class DashboardScreen {
                 int sourceIndex = Integer.parseInt(db.getString());
                 int targetIndex = slotIndex;
 
-                // Assuming you have a way to swap elements in the Player's inventory list:
                 List<InventoryItem> inventory = player.getInventory();
-                if (sourceIndex < inventory.size() && targetIndex < inventory.size()) {
-                    // Simple swap
-                    InventoryItem item1 = inventory.get(sourceIndex);
-                    InventoryItem item2 = inventory.get(targetIndex);
-                    inventory.set(targetIndex, item1);
-                    inventory.set(sourceIndex, item2);
+                
+                // Ensure inventory has enough slots
+                while (inventory.size() <= Math.max(sourceIndex, targetIndex)) {
+                    inventory.add(null);
                 }
+                
+                // Simple swap
+                InventoryItem item1 = inventory.get(sourceIndex);
+                InventoryItem item2 = inventory.get(targetIndex);
+                inventory.set(targetIndex, item1);
+                inventory.set(sourceIndex, item2);
 
+                // Refresh inventory display
                 if (activePanelType != null && activePanelType.equals("inventory")) {
                     togglePanel("inventory");
                     togglePanel("inventory");
@@ -1358,48 +1473,65 @@ public class DashboardScreen {
         if (xpForNextLevel <= 0) return 1.0; // Max level reached
         return (double) currentXp / xpForNextLevel;		// Otherwise, return progress as a fraction of xp toward next level
     }
-
-
+    
     private void handleSellItem(InventoryItem item, int slotIndex) {
         if (item.getType().equals("Fish")) {
-            // Fish are stackable. The Model's changeItemQuantity handles reducing the count
-            // and removing the item completely if the quantity reaches zero.
-            if (player.changeItemQuantity(item.getName(), -1)) {
-                int coins = item.getSellCoins();
-                int xp = item.getSellXP();
-
-                player.addCoins(coins);
-                player.addXp(xp);
-                player.getStats().addMoneyEarned(coins);
-                player.getStats().addXpEarned(xp);
-
-                refreshUsernameLevel();             // <--- update level label
-                updateStats();                      // <--- update other labels (coins, XP, baits)
-
-                System.out.println("Sold 1x " + item.getName() + " for " + coins + " coins + " + xp + " XP");
-            } else {
-                System.err.println("Sell failed: Could not reduce fish quantity.");
+            // Get the actual item from the slot to ensure we're selling the right rarity
+            InventoryItem slotItem = player.getItemAt(slotIndex);
+            
+            if (slotItem == null) {
+                System.err.println("Sell failed: No item in slot.");
                 return;
             }
+            
+            int coins = slotItem.getSellCoins();
+            int xp = slotItem.getSellXP();
+            
+            // Reduce quantity by 1
+            int newQuantity = slotItem.getQuantity() - 1;
+            
+            if (newQuantity <= 0) {
+                // Remove the item entirely if quantity reaches 0
+                player.setItemAt(slotIndex, null);
+                
+                // If this was the selected bait, deselect it
+                if (slotItem == player.getSelectedBait()) {
+                    player.setSelectedBait(null);
+                    player.setSelectedSlotIndex(-1);
+                }
+            } else {
+                // Just reduce the quantity
+                slotItem.setQuantity(newQuantity);
+            }
+            
+            player.addCoins(coins);
+            player.addXp(xp);
+            player.getStats().addMoneyEarned(coins);
+            player.getStats().addXpEarned(xp);
+
+            refreshUsernameLevel();
+            updateStats();
+
+            System.out.println("Sold 1x " + slotItem.getName() + " (" + slotItem.getRarity() + ") for " + coins + " coins + " + xp + " XP");
+            
         } else if (item.getType().equals("Rod")) {
             // Rods are non-stackable, remove the entire object
 
-            // Safety check: Cannot sell equipped rod (UI button should prevent this, but check here too)
+            // Safety check: Cannot sell equipped rod
             if (item.getName().equals(player.getEquippedRod())) {
                 System.err.println("Sell failed: Cannot sell equipped rod.");
                 return;
             }
 
             int coins = item.getRodSellValue();
-            player.removeFromInventory(item);
+            player.setItemAt(slotIndex, null); // Remove from slot
             player.addCoins(coins);
 
             System.out.println("Sold " + item.getName() + " for " + coins + " coins");
         }
 
-        updateStats(); // Recalculates stats and refreshes panel
+        updateStats();
 
-        // This is now redundant since updateStats calls refreshActivePanel, but keeping for safety
         if (activePanelType != null && activePanelType.equals("inventory")) {
             togglePanel("inventory");
             togglePanel("inventory");

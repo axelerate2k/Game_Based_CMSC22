@@ -12,29 +12,25 @@ public class Player {
     private PlayerStats stats;
     private long lastRewardClaim;
     private InventoryItem selectedBait;
-    private int selectedSlotIndex = -1; // Track selected bait slot for visual feedback
+    private int selectedSlotIndex = -1;
 
     public Player(String username) {
         this.username = username;
-        this.coins = 50;
-        this.xp = 0;
-        this.equippedRod = "Bamboo Rod";
+        this.coins = 100; // Starting coins
+        this.xp = 0; // Starting XP
+        this.equippedRod = "Bamboo Rod"; // Starting rod
+        this.stats = new PlayerStats(); // Initialize stats
+        this.lastRewardClaim = 0; // No reward claimed yet
         this.inventory = new ArrayList<>();
-        this.stats = new PlayerStats();
-        this.lastRewardClaim = 0;
-        this.selectedBait = null;
         
-        // Add starter items - Fill exactly 15 slots for testing
+        // Add starting items
         inventory.add(new InventoryItem("Rod", "Bamboo Rod", 1));
-        inventory.add(new InventoryItem("Bait", "Basic Worm", 20));
-        inventory.add(new InventoryItem("Bait", "Enhanced Bait", 10));
-        inventory.add(new InventoryItem("Fish", "Anglerfish", 5, "Common"));
-        inventory.add(new InventoryItem("Fish", "Red Salmon", 6, "Rare"));
-        inventory.add(new InventoryItem("Fish", "Swordfish", 8, "Legendary"));
-        inventory.add(new InventoryItem("Bait", "Rare Lure", 10));
-        inventory.add(new InventoryItem("Rod", "Wooden Rod", 1));
-        inventory.add(new InventoryItem("Fish", "Oarfish", 1, "Common"));
-        // Leave some empty slots (inventory size = 15)
+        inventory.add(new InventoryItem("Bait", "Basic Worm", 10));
+        
+        // Fill the rest with nulls up to 15 slots
+        while (inventory.size() < 15) {
+            inventory.add(null);
+        }
     }
     
     // --- ITEM MANAGEMENT LOGIC ---
@@ -44,12 +40,13 @@ public class Player {
      */
     public InventoryItem findItemByName(String name) {
         for (InventoryItem item : inventory) {
-            if (item.getName().equals(name)) {
+            if (item != null && item.getName().equals(name)) { // Added null check
                 return item;
             }
         }
         return null;
     }
+    
 
     /**
      * Changes the quantity of an item. Used for selling/using stackable items (Fish/Bait).
@@ -75,11 +72,15 @@ public class Player {
 
         if (newQty == 0) {
             // Remove the item entirely if the quantity hits zero
-            inventory.remove(item);
+            int index = inventory.indexOf(item);
+            if (index >= 0) {
+                inventory.set(index, null); // Set to null instead of removing to maintain 15 slots
+            }
 
             // If the item removed was the selected bait, deselect it.
             if (item == this.selectedBait) {
                 this.selectedBait = null;
+                this.selectedSlotIndex = -1;
             }
             return true;
         }
@@ -124,12 +125,26 @@ public class Player {
             // If the item is a unique equipment (like a Rod) and already exists,
             // we do nothing to prevent duplicates.
         } else {
-            // Case 2: Item does not exist. Add it regardless of type.
-             inventory.add(item);
+            // Case 2: Item does not exist. Add it to first empty slot
+            for (int i = 0; i < inventory.size(); i++) {
+                if (inventory.get(i) == null) {
+                    inventory.set(i, item);
+                    return;
+                }
+            }
+            // If no empty slot, add at the end (shouldn't happen with 15 slot limit)
+            if (inventory.size() < 15) {
+                inventory.add(item);
+            }
         }
     }
 
-    public void removeFromInventory(InventoryItem item) { inventory.remove(item); }
+    public void removeFromInventory(InventoryItem item) { 
+        int index = inventory.indexOf(item);
+        if (index >= 0) {
+            inventory.set(index, null); // Set to null instead of removing
+        }
+    }
     
     public PlayerStats getStats() { return stats; }
     
@@ -174,11 +189,11 @@ public class Player {
         }
     }
 
-    // Get total bait count
+    // Get total bait count - FIXED with null check
     public int getTotalBaits() {
         int total = 0;
         for (InventoryItem item : inventory) {
-            if (item.getType().equals("Bait")) {
+            if (item != null && item.getType().equals("Bait")) { // Added null check
                 total += item.getQuantity();
             }
         }
@@ -201,7 +216,7 @@ public class Player {
    
     
     public int getLevel() {
-    	// Calculate level: integer division of XP by 50, plus 1 for starting at level 1
+        // Calculate level: integer division of XP by 50, plus 1 for starting at level 1
         int level = (this.xp / 50) + 1; // Each level requires +50 XP
         return Math.min(level, 30);     // Max level 30
     }
@@ -209,13 +224,12 @@ public class Player {
     public int getXpForNextLevel() {
         int level = getLevel();
         if (level >= 30) return -1; // Max level reached, no further XP needed
-        return level * 50;		// Total XP required to reach the next level
+        return level * 50;      // Total XP required to reach the next level
     }
 
     public int getXpRemaining() {
         int next = getXpForNextLevel();
-        if (next == -1) return 0;		// If max level, no XP remaining
-        return next - this.xp;			// XP left to reach next level
+        if (next == -1) return 0;       // If max level, no XP remaining
+        return next - this.xp;          // XP left to reach next level
     }
-
 }
