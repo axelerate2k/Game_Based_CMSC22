@@ -22,7 +22,7 @@
     innershadow(gaussian, rgba(240,220,200,0.25), 4, 0, 0, 2);
     -fx-padding: 32px 28px 34px 28px;
     -fx-opacity: 0.99;
-    -fx-max-width: 640px;
+    -fx-max-width: 580px;
     -fx-max-height: 320px;
 }
 
@@ -32,7 +32,7 @@
 
 .title-label {
     -fx-font-family: 'Dogica Pixel';
-    -fx-font-size: 32px;
+    -fx-font-size: 45px;
     -fx-scale-x: 1.1;
     -fx-scale-y: 1.1;
     -fx-font-weight: bold;
