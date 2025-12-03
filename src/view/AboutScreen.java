@@ -44,7 +44,7 @@ public class AboutScreen {
         Label titleLabel = new Label("FISHDA");
         titleLabel.setStyle(
                 "-fx-font-family: 'BoldPixels';" +
-                        "-fx-font-size: 48px;" +
+                        "-fx-font-size: 50px;" +
                         "-fx-font-weight: bold;" +
                         "-fx-text-fill: #f4d35e;" +
                         "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 6, 0, 2, 2);"
@@ -54,7 +54,7 @@ public class AboutScreen {
         Label subtitleLabel = new Label("A Pixel Art Fishing Adventure");
         subtitleLabel.setStyle(
                 "-fx-font-family: 'BoldPixels';" +
-                        "-fx-font-size: 18px;" +
+                        "-fx-font-size: 24px;" +
                         "-fx-text-fill: #d4a373;"
         );
 
@@ -100,7 +100,7 @@ public class AboutScreen {
         Label teamTitle = new Label("👥 Development Team");
         teamTitle.setStyle(
                 "-fx-font-family: 'BoldPixels';" +
-                        "-fx-font-size: 24px;" +
+                        "-fx-font-size: 28px;" +
                         "-fx-font-weight: bold;" +
                         "-fx-text-fill: #f4d35e;"
         );
@@ -128,7 +128,7 @@ public class AboutScreen {
             Label memberLabel = new Label("• " + member);
             memberLabel.setStyle(
                     "-fx-font-family: 'BoldPixels';" +
-                            "-fx-font-size: 14px;" +
+                            "-fx-font-size: 24px;" +
                             "-fx-text-fill: #f5e1b3;"
             );
             teamBox.getChildren().add(memberLabel);
@@ -141,7 +141,7 @@ public class AboutScreen {
         Label creditsTitle = new Label("🎨 Asset Credits");
         creditsTitle.setStyle(
                 "-fx-font-family: 'BoldPixels';" +
-                        "-fx-font-size: 24px;" +
+                        "-fx-font-size: 28px;" +
                         "-fx-font-weight: bold;" +
                         "-fx-text-fill: #f4d35e;"
         );
@@ -161,7 +161,7 @@ public class AboutScreen {
         Label credit1Title = new Label("Fishing Icons (Fish, Rods, Baits):");
         credit1Title.setStyle(
                 "-fx-font-family: 'BoldPixels';" +
-                        "-fx-font-size: 13px;" +
+                        "-fx-font-size: 24px;" +
                         "-fx-font-weight: bold;" +
                         "-fx-text-fill: #f4d35e;"
         );
@@ -169,7 +169,7 @@ public class AboutScreen {
         Label credit1Link = new Label("https://happypotato100.itch.io/fishing-icon-pack");
         credit1Link.setStyle(
                 "-fx-font-family: 'BoldPixels';" +
-                        "-fx-font-size: 11px;" +
+                        "-fx-font-size: 20px;" +
                         "-fx-text-fill: #4A90E2;" +
                         "-fx-underline: true;"
         );
@@ -178,7 +178,7 @@ public class AboutScreen {
         Label credit2Title = new Label("Fisherman Animation & Background Tilesets:");
         credit2Title.setStyle(
                 "-fx-font-family: 'BoldPixels';" +
-                        "-fx-font-size: 13px;" +
+                        "-fx-font-size: 20px;" +
                         "-fx-font-weight: bold;" +
                         "-fx-text-fill: #f4d35e;"
         );
@@ -186,7 +186,7 @@ public class AboutScreen {
         Label credit2Link = new Label("https://free-game-assets.itch.io/free-fishing-pixel-art-pack");
         credit2Link.setStyle(
                 "-fx-font-family: 'BoldPixels';" +
-                        "-fx-font-size: 11px;" +
+                        "-fx-font-size: 20px;" +
                         "-fx-text-fill: #4A90E2;" +
                         "-fx-underline: true;"
         );
@@ -210,7 +210,7 @@ public class AboutScreen {
         Label copyrightLabel = new Label("© 2025 Fishda Development Team");
         copyrightLabel.setStyle(
                 "-fx-font-family: 'BoldPixels';" +
-                        "-fx-font-size: 12px;" +
+                        "-fx-font-size: 20px;" +
                         "-fx-text-fill: #999999;" +
                         "-fx-padding: 20 0 0 0;"
         );
@@ -258,7 +258,7 @@ public class AboutScreen {
         Label titleLabel = new Label(title);
         titleLabel.setStyle(
                 "-fx-font-family: 'BoldPixels';" +
-                        "-fx-font-size: 20px;" +
+                        "-fx-font-size: 28px;" +
                         "-fx-font-weight: bold;" +
                         "-fx-text-fill: #f4d35e;"
         );
@@ -266,7 +266,7 @@ public class AboutScreen {
         Label contentLabel = new Label(content);
         contentLabel.setStyle(
                 "-fx-font-family: 'BoldPixels';" +
-                        "-fx-font-size: 13px;" +
+                        "-fx-font-size: 20px;" +
                         "-fx-text-fill: #f5e1b3;" +
                         "-fx-line-spacing: 5px;"
         );

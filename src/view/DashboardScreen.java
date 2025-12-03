@@ -458,7 +458,7 @@ public class DashboardScreen {
         String[] fishList = { "Anglerfish", "Red Salmon", "Swordfish", "Oarfish", "Great White Shark" };
         String species = fishList[(int)(Math.random() * fishList.length)];
 
-        System.out.println("[DEBUG] Rolled fish: " + species + " (" + rarity + ")");
+        System.out.println("Rolled fish: " + species + " (" + rarity + ")");
 
         // Create new InventoryItem with the correct rarity
         return new InventoryItem("Fish", species, 1, rarity);
