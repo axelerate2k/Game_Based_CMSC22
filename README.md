@@ -1,7 +1,7 @@
 # 🎣 Fishda - Pixel Art Fishing Adventure
 
 A relaxing pixel art fishing game built with JavaFX where you catch various fish, upgrade your fishing equipment, and build your collection. Experience the joy of fishing in a charming retro-style world with simple mechanics and rewarding gameplay.
-<img width="1590" height="925" alt="image" src="https://github.com/user-attachments/assets/d6b5ebf4-d2fc-4de8-8091-6204156d645b" />
+<img width="1909" height="1116" alt="image" src="https://github.com/user-attachments/assets/26ae576d-151c-4985-938a-2290b78b727b" />
 <img width="1589" height="933" alt="image" src="https://github.com/user-attachments/assets/b813aff0-3c29-4a3c-9c0f-fa2b6f3071f9" />
 <img width="1594" height="928" alt="image" src="https://github.com/user-attachments/assets/0e7e5a11-d928-43ee-a2b9-5eabdb097621" />
 
