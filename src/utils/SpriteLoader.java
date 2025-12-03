@@ -42,6 +42,7 @@ public class SpriteLoader {
      * Load fisherman idle animation frames
      * @return Array of 4 idle animation frames
      */
+
     public static Image[] loadFishermanIdle() {
         try {
             Image spriteSheet = new Image(SpriteLoader.class.getResourceAsStream("/sprites/Fisherman_idle.png"));
@@ -58,8 +59,8 @@ public class SpriteLoader {
      */
     public static Image[] loadFishermanFishing() {
         try {
-            Image spriteSheet = new Image(SpriteLoader.class.getResourceAsStream("/sprites/Fisherman_fish.png"));
-            return extractHorizontalFrames(spriteSheet, 4, 48, 48, 0);
+            Image spriteSheet = new Image(SpriteLoader.class.getResourceAsStream("/sprites/Fisherman_hook.png"));
+            return extractHorizontalFrames(spriteSheet, 6, 48, 48, 0);
         } catch (Exception e) {
             System.err.println("Could not load fisherman fishing sprites: " + e.getMessage());
             return null;

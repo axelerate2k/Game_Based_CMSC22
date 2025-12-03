@@ -5,6 +5,7 @@ public class InventoryItem {
     private String name;
     private int quantity;
     private String rarity; // For fish: "Common", "Rare", "Legendary"
+
     
     public InventoryItem(String type, String name, int quantity) {
         this.type = type;
