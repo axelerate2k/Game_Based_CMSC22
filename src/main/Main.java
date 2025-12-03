@@ -93,7 +93,7 @@ public class Main extends Application {
         centerPanel.getStyleClass().add("login-panel");
         
         // Title
-        titleLabel = new Label("Fishing Adventure");
+        titleLabel = new Label("Fishda");
         titleLabel.getStyleClass().add("title-label");
         titleLabel.setText(titleLabel.getText().toUpperCase());
 
@@ -290,7 +290,7 @@ public class Main extends Application {
         StackPane.setAlignment(logo, Pos.CENTER);
 
         // Footer text
-        Label footer = new Label("© 2025 Charlie Kirk Studio");
+        Label footer = new Label("© Fishda Development Team");
         footer.setId("splash-footer");
         StackPane.setAlignment(footer, Pos.BOTTOM_CENTER);
 

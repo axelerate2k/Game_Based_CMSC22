@@ -109,6 +109,13 @@ public class DashboardScreen {
         AnchorPane.setTopAnchor(dailyBtn, 180.0); // under Shop button
         AnchorPane.setLeftAnchor(dailyBtn, 0.0);
 
+        //about button
+        Button aboutBtn = new Button("ℹ️ About");
+        aboutBtn.getStyleClass().add("nav-btn");
+        aboutBtn.setOnAction(e -> showAboutScreen());
+        gameLayer.getChildren().add(aboutBtn);
+        AnchorPane.setTopAnchor(aboutBtn, 230.0); // under Daily button
+        AnchorPane.setLeftAnchor(aboutBtn, 0.0);
 
         // --- Warning label --- //
         warningLabel = new Label();
@@ -175,7 +182,11 @@ public class DashboardScreen {
         stage.setScene(scene);
     }
 
-
+    //show about screen
+    private void showAboutScreen() {
+        AboutScreen aboutScreen = new AboutScreen(stage, scene);
+        stage.setScene(aboutScreen.getScene());
+    }
     // ---------------- Essential Methods ----------------
 
     private HBox createTopBar() {
@@ -447,7 +458,7 @@ public class DashboardScreen {
         String[] fishList = { "Anglerfish", "Red Salmon", "Swordfish", "Oarfish", "Great White Shark" };
         String species = fishList[(int)(Math.random() * fishList.length)];
 
-        System.out.println("[DEBUG] Rolled fish: " + species + " (" + rarity + ")");
+        System.out.println("Rolled fish: " + species + " (" + rarity + ")");
 
         // Create new InventoryItem with the correct rarity
         return new InventoryItem("Fish", species, 1, rarity);
@@ -548,10 +559,11 @@ public class DashboardScreen {
     }
 
     private void setupDragAndDrop(Button slotBtn, int slotIndex, InventoryItem item) {
-        if (item == null) return; // Prevent drag/drop setup on empty slots
-
+        // Set up drag detection (only if slot has an item)
         slotBtn.setOnDragDetected(e -> {
-
+            InventoryItem currentItem = player.getInventory().get(slotIndex);
+            if (currentItem == null) return; // Can't drag empty slot
+            
             Dragboard db = slotBtn.startDragAndDrop(TransferMode.MOVE);
             ClipboardContent content = new ClipboardContent();
             content.putString(String.valueOf(slotIndex));
@@ -561,6 +573,7 @@ public class DashboardScreen {
             e.consume();
         });
 
+        // Allow dragging over ANY slot (empty or not)
         slotBtn.setOnDragOver(e -> {
             if (e.getGestureSource() != slotBtn && e.getDragboard().hasString()) {
                 e.acceptTransferModes(TransferMode.MOVE);
@@ -588,16 +601,20 @@ public class DashboardScreen {
                 int sourceIndex = Integer.parseInt(db.getString());
                 int targetIndex = slotIndex;
 
-                // Assuming you have a way to swap elements in the Player's inventory list:
                 List<InventoryItem> inventory = player.getInventory();
-                if (sourceIndex < inventory.size() && targetIndex < inventory.size()) {
-                    // Simple swap
-                    InventoryItem item1 = inventory.get(sourceIndex);
-                    InventoryItem item2 = inventory.get(targetIndex);
-                    inventory.set(targetIndex, item1);
-                    inventory.set(sourceIndex, item2);
+                
+                // Ensure inventory has enough slots
+                while (inventory.size() <= Math.max(sourceIndex, targetIndex)) {
+                    inventory.add(null);
                 }
+                
+                // Simple swap
+                InventoryItem item1 = inventory.get(sourceIndex);
+                InventoryItem item2 = inventory.get(targetIndex);
+                inventory.set(targetIndex, item1);
+                inventory.set(sourceIndex, item2);
 
+                // Refresh inventory display
                 if (activePanelType != null && activePanelType.equals("inventory")) {
                     togglePanel("inventory");
                     togglePanel("inventory");
@@ -1459,44 +1476,62 @@ public class DashboardScreen {
     
     private void handleSellItem(InventoryItem item, int slotIndex) {
         if (item.getType().equals("Fish")) {
-            // Fish are stackable. The Model's changeItemQuantity handles reducing the count
-            // and removing the item completely if the quantity reaches zero.
-            if (player.changeItemQuantity(item.getName(), -1)) {
-                int coins = item.getSellCoins();
-                int xp = item.getSellXP();
-
-                player.addCoins(coins);
-                player.addXp(xp);
-                player.getStats().addMoneyEarned(coins);
-                player.getStats().addXpEarned(xp);
-
-                refreshUsernameLevel();             // <--- update level label
-                updateStats();                      // <--- update other labels (coins, XP, baits)
-
-                System.out.println("Sold 1x " + item.getName() + " for " + coins + " coins + " + xp + " XP");
-            } else {
-                System.err.println("Sell failed: Could not reduce fish quantity.");
+            // Get the actual item from the slot to ensure we're selling the right rarity
+            InventoryItem slotItem = player.getItemAt(slotIndex);
+            
+            if (slotItem == null) {
+                System.err.println("Sell failed: No item in slot.");
                 return;
             }
+            
+            int coins = slotItem.getSellCoins();
+            int xp = slotItem.getSellXP();
+            
+            // Reduce quantity by 1
+            int newQuantity = slotItem.getQuantity() - 1;
+            
+            if (newQuantity <= 0) {
+                // Remove the item entirely if quantity reaches 0
+                player.setItemAt(slotIndex, null);
+                
+                // If this was the selected bait, deselect it
+                if (slotItem == player.getSelectedBait()) {
+                    player.setSelectedBait(null);
+                    player.setSelectedSlotIndex(-1);
+                }
+            } else {
+                // Just reduce the quantity
+                slotItem.setQuantity(newQuantity);
+            }
+            
+            player.addCoins(coins);
+            player.addXp(xp);
+            player.getStats().addMoneyEarned(coins);
+            player.getStats().addXpEarned(xp);
+
+            refreshUsernameLevel();
+            updateStats();
+
+            System.out.println("Sold 1x " + slotItem.getName() + " (" + slotItem.getRarity() + ") for " + coins + " coins + " + xp + " XP");
+            
         } else if (item.getType().equals("Rod")) {
             // Rods are non-stackable, remove the entire object
 
-            // Safety check: Cannot sell equipped rod (UI button should prevent this, but check here too)
+            // Safety check: Cannot sell equipped rod
             if (item.getName().equals(player.getEquippedRod())) {
                 System.err.println("Sell failed: Cannot sell equipped rod.");
                 return;
             }
 
             int coins = item.getRodSellValue();
-            player.removeFromInventory(item);
+            player.setItemAt(slotIndex, null); // Remove from slot
             player.addCoins(coins);
 
             System.out.println("Sold " + item.getName() + " for " + coins + " coins");
         }
 
-        updateStats(); // Recalculates stats and refreshes panel
+        updateStats();
 
-        // This is now redundant since updateStats calls refreshActivePanel, but keeping for safety
         if (activePanelType != null && activePanelType.equals("inventory")) {
             togglePanel("inventory");
             togglePanel("inventory");
