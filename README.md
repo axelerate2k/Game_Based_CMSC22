@@ -99,7 +99,7 @@ A relaxing pixel art fishing game built with JavaFX where you catch various fish
 
 ```bash
 git clone https://github.com/axelerate2k/Game_Based_CMSC22.git
-cd fishda-game
+cd Game_Based_CMSC22
 ```
 **Or download the ZIP file and paste into Java Project
 
